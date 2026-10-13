@@ -1,0 +1,371 @@
+---
+// Landing hero card: a cyclist rides over a mountain that turns into a ride profile chart.
+// SVG and keyframes are ported as-is from the design. Mint parts use currentColor (= --accent).
+// With reduced motion every element shows its final state: the finished chart.
+import Sticker from '../Sticker.astro';
+
+const ELEVATION =
+  'M0 240 C60 230 90 200 140 190 C190 180 210 120 270 110 C320 100 340 150 390 140 C440 130 470 80 520 70 C555 64 580 86 600 96';
+const POWER =
+  'M0 190 L20 150 L40 175 L60 120 L85 160 L110 110 L135 150 L160 95 L190 140 L215 100 L250 170 L280 90 L310 130 L335 80 L365 150 L395 110 L430 160 L460 60 L490 120 L520 85 L555 130 L600 100';
+
+const tiles = [
+  { label: 'Power', color: 'var(--yellow)', points: '0,26 12,12 24,22 36,8 48,20 60,6 72,18 84,10 96,22 108,8 120,16' },
+  { label: 'Cadence', color: 'var(--accent)', points: '0,18 12,14 24,19 36,13 48,18 60,12 72,17 84,13 96,18 108,12 120,15' },
+  { label: 'Heart rate', color: 'var(--red)', points: '0,30 20,26 40,22 60,18 80,14 100,12 120,8' },
+];
+---
+
+<div class="ride-card">
+  <Sticker delay={6.6}>Ride. Measure. Repeat.</Sticker>
+
+  <div class="card-head">
+    <span class="card-title">Ride profile</span>
+    <span class="legend">
+      <span><i style="background: var(--accent)"></i>Elevation</span>
+      <span><i style="background: var(--yellow)"></i>Power</span>
+    </span>
+  </div>
+
+  <svg class="chart" viewBox="0 0 600 300" role="img" aria-label="Animation: a cyclist rides over a mountain that turns into a ride profile chart">
+    <defs>
+      <linearGradient id="ride-elev" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="currentColor" stop-opacity=".45"></stop>
+        <stop offset="1" stop-color="currentColor" stop-opacity="0"></stop>
+      </linearGradient>
+      <linearGradient id="ride-rock" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#2E4659"></stop>
+        <stop offset="1" stop-color="#0F1A21"></stop>
+      </linearGradient>
+    </defs>
+
+    <g class="scene">
+      <circle cx="92" cy="62" r="34" fill="#E3B341" opacity=".18"></circle>
+      <circle cx="92" cy="62" r="20" fill="#E3B341"></circle>
+      <path d="M0 205 L60 150 L110 182 L180 112 L240 172 L310 124 L380 178 L450 108 L530 165 L600 132 L600 300 L0 300 Z" fill="#223443"></path>
+      <g class="cloud"><ellipse cx="300" cy="52" rx="28" ry="9" fill="#34505F"></ellipse><ellipse cx="286" cy="45" rx="14" ry="9" fill="#34505F"></ellipse></g>
+      <g class="cloud"><ellipse cx="178" cy="96" rx="22" ry="7" fill="#34505F"></ellipse><ellipse cx="190" cy="91" rx="11" ry="7" fill="#34505F"></ellipse></g>
+    </g>
+
+    <path class="ghost" d={`${ELEVATION} L600 270 L0 270 Z`} fill="url(#ride-rock)"></path>
+    <path class="ghost ghost-line" d={ELEVATION} fill="none" stroke="#3E5A6E"></path>
+
+    <g class="grow" stroke="#34505F" stroke-dasharray="4 6">
+      <line x1="0" y1="60" x2="600" y2="60"></line>
+      <line x1="0" y1="120" x2="600" y2="120"></line>
+      <line x1="0" y1="180" x2="600" y2="180"></line>
+      <line x1="0" y1="240" x2="600" y2="240"></line>
+    </g>
+    <path class="grow" d={`${ELEVATION} L600 270 L0 270 Z`} fill="url(#ride-elev)"></path>
+    <path class="elevation" pathLength="1" d={ELEVATION} fill="none" stroke="currentColor" stroke-dasharray="1"></path>
+
+    <g class="rider">
+      <g class="rider-scale">
+        <g class="wheel-spin"><circle cx="-15" cy="-10" r="10" fill="none" stroke="#F8F8FF" stroke-width="2"></circle><line x1="-25" y1="-10" x2="-5" y2="-10" stroke="#A9BCC8" stroke-width="1"></line><line x1="-15" y1="-20" x2="-15" y2="0" stroke="#A9BCC8" stroke-width="1"></line></g>
+        <g class="wheel-spin"><circle cx="15" cy="-10" r="10" fill="none" stroke="#F8F8FF" stroke-width="2"></circle><line x1="5" y1="-10" x2="25" y2="-10" stroke="#A9BCC8" stroke-width="1"></line><line x1="15" y1="-20" x2="15" y2="0" stroke="#A9BCC8" stroke-width="1"></line></g>
+        <g stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"><line x1="-15" y1="-10" x2="0" y2="-10"></line><line x1="0" y1="-10" x2="-5" y2="-25"></line><line x1="-5" y1="-25" x2="11" y2="-24"></line><line x1="11" y1="-24" x2="15" y2="-10"></line><line x1="0" y1="-10" x2="11" y2="-24"></line><line x1="-15" y1="-10" x2="-5" y2="-25"></line><line x1="11" y1="-24" x2="13" y2="-27"></line></g>
+        <line x1="-9" y1="-26" x2="-2" y2="-26" stroke="#F8F8FF" stroke-width="2" stroke-linecap="round"></line>
+        <g class="bob">
+          <line x1="-5" y1="-27" x2="6" y2="-37" stroke="#E3B341" stroke-width="5" stroke-linecap="round"></line>
+          <polyline points="-5,-27 3,-19 2,-10" fill="none" stroke="#F8F8FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+          <line x1="6" y1="-36" x2="12" y2="-26" stroke="#F8F8FF" stroke-width="2.6" stroke-linecap="round"></line>
+          <circle cx="10" cy="-42" r="4.2" fill="#F8F8FF"></circle>
+          <path d="M5.6 -43 A4.6 4.6 0 0 1 14.4 -43 Z" fill="#F07A7A"></path>
+        </g>
+      </g>
+    </g>
+
+    <path class="power" pathLength="1" d={POWER} fill="none" stroke="#E3B341" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="1"></path>
+
+    <g class="marker">
+      <line x1="460" y1="52" x2="460" y2="270" stroke="#F8F8FF" stroke-width="1.5" stroke-dasharray="3 5"></line>
+      <circle cx="460" cy="60" r="6" fill="#E3B341" stroke="#1E2F3B" stroke-width="3"></circle>
+      <rect x="386" y="12" width="148" height="32" rx="9" fill="#141F27" stroke="#E3B341"></rect>
+      <text x="460" y="33" text-anchor="middle" font-size="13" font-weight="700" fill="#F8F8FF" font-family="-apple-system,BlinkMacSystemFont,sans-serif">Hardest effort</text>
+    </g>
+
+    <g class="grow axis-labels">
+      <text x="2" y="292" font-size="12" fill="#A9BCC8" font-family="-apple-system,BlinkMacSystemFont,sans-serif">Start</text>
+      <text x="598" y="292" text-anchor="end" font-size="12" fill="#A9BCC8" font-family="-apple-system,BlinkMacSystemFont,sans-serif">Finish</text>
+    </g>
+  </svg>
+
+  <div class="tiles" aria-hidden="true">
+    {
+      tiles.map((tile) => (
+        <div class="tile">
+          <span>{tile.label}</span>
+          <svg viewBox="0 0 120 36">
+            <polyline points={tile.points} fill="none" stroke={tile.color} stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+          </svg>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .ride-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 14px;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card-sm);
+    color: var(--accent);
+  }
+
+  .ride-card > :global(.sticker) {
+    right: 10px;
+    top: -16px;
+  }
+
+  .card-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .card-title {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 16px;
+    color: var(--text);
+  }
+
+  .legend {
+    display: flex;
+    gap: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  .legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .legend i {
+    display: block;
+    width: 9px;
+    height: 9px;
+    border-radius: 3px;
+  }
+
+  .chart {
+    width: 100%;
+    height: auto;
+  }
+
+  /* Timeline (6 s): scene fades in, ghost mountain fades out, chart grows in,
+     rider rides 0.7–5.2 s, power line draws at 5.1 s, marker at 6.3 s, sticker at 6.6 s. */
+  .scene {
+    opacity: 0;
+    animation: scene 6s ease both;
+  }
+
+  .cloud {
+    animation: drift 6s linear both;
+  }
+
+  .ghost {
+    opacity: 0;
+    animation: ghost 6s ease both;
+  }
+
+  .ghost-line,
+  .elevation,
+  .power {
+    stroke-width: 4;
+  }
+
+  .grow {
+    animation: grow 6s ease both;
+  }
+
+  .elevation {
+    animation: draw 4s linear 0.95s both;
+  }
+
+  .rider {
+    opacity: 0;
+    transform-origin: 0 0;
+    animation: ride 4.5s linear 0.7s both;
+  }
+
+  .rider-scale {
+    transform: scale(2);
+  }
+
+  .wheel-spin {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: spin 0.5s linear infinite;
+  }
+
+  .bob {
+    animation: bob 0.4s ease-in-out infinite;
+  }
+
+  .power {
+    animation: draw 1.4s ease-out 5.1s both;
+  }
+
+  .marker {
+    animation: pop 0.5s ease-out 6.3s both;
+  }
+
+  /* The mobile board leaves out the marker, the axis labels and the sparkline tiles. */
+  .marker,
+  .axis-labels,
+  .tiles {
+    display: none;
+  }
+
+  .tiles {
+    flex-wrap: wrap;
+    gap: 12px;
+    animation: up 0.6s ease-out 5.4s both;
+  }
+
+  .tile {
+    flex: 1 1 130px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-inner);
+  }
+
+  .tile span {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .tile svg {
+    width: 100%;
+    height: 36px;
+  }
+
+  @media (min-width: 720px) {
+    .ride-card {
+      gap: 18px;
+      margin-top: 0;
+      padding: 24px;
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-card);
+    }
+
+    .ride-card > :global(.sticker) {
+      right: -10px;
+      top: -18px;
+    }
+
+    .card-head {
+      gap: 10px;
+    }
+
+    .card-title {
+      font-size: 18px;
+    }
+
+    .legend {
+      gap: 16px;
+      font-size: 13px;
+    }
+
+    .legend span {
+      gap: 6px;
+    }
+
+    .legend i {
+      width: 10px;
+      height: 10px;
+    }
+
+    .ghost-line {
+      stroke-width: 3;
+    }
+
+    .elevation,
+    .power {
+      stroke-width: 2.5;
+    }
+
+    .rider-scale {
+      transform: scale(1.5);
+    }
+
+    .marker,
+    .axis-labels {
+      display: inline;
+    }
+
+    .tiles {
+      display: flex;
+    }
+  }
+
+  @keyframes scene {
+    0% { opacity: 0; }
+    9%, 70% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  @keyframes ghost {
+    0%, 72% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  @keyframes grow {
+    0%, 70% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  @keyframes drift {
+    from { transform: translateX(-24px); }
+    to { transform: translateX(48px); }
+  }
+
+  @keyframes ride {
+    0% { opacity: 1; transform: translate(-30px, 233.7px) rotate(-11.8deg); }
+    5.56% { transform: translate(0px, 240px) rotate(-11.8deg); }
+    9.26% { transform: translate(27px, 233.7px) rotate(-16.6deg); }
+    12.96% { transform: translate(53.1px, 224.3px) rotate(-22.5deg); }
+    16.67% { transform: translate(78.4px, 212.8px) rotate(-24.9deg); }
+    20.37% { transform: translate(103.7px, 201.4px) rotate(-22.1deg); }
+    24.07% { transform: translate(129.9px, 192.3px) rotate(-15.6deg); }
+    27.78% { transform: translate(156.5px, 184.6px) rotate(-24.3deg); }
+    31.48% { transform: translate(179.7px, 169.4px) rotate(-38.6deg); }
+    35.19% { transform: translate(200.3px, 150.9px) rotate(-42.5deg); }
+    38.89% { transform: translate(221.2px, 132.6px) rotate(-37.3deg); }
+    42.59% { transform: translate(244.7px, 117.9px) rotate(-24.8deg); }
+    46.3% { transform: translate(271.2px, 109.8px) rotate(-8.4deg); }
+    50% { transform: translate(298.7px, 110.7px) rotate(13.6deg); }
+    53.7% { transform: translate(324.1px, 121.7px) rotate(27.7deg); }
+    57.41% { transform: translate(348.6px, 134.8px) rotate(22.7deg); }
+    61.11% { transform: translate(375.4px, 141.3px) rotate(1.6deg); }
+    64.81% { transform: translate(402.6px, 136.5px) rotate(-18.8deg); }
+    68.52% { transform: translate(427.5px, 124.4px) rotate(-31.1deg); }
+    72.22% { transform: translate(450.3px, 108.5px) rotate(-36.2deg); }
+    75.93% { transform: translate(472.6px, 92.1px) rotate(-34.2deg); }
+    79.63% { transform: translate(496.5px, 78px) rotate(-24.9deg); }
+    83.33% { transform: translate(522.9px, 69.6px) rotate(-7.4deg); }
+    87.04% { transform: translate(550.4px, 71.4px) rotate(14.2deg); }
+    90.74% { transform: translate(575.9px, 82.2px) rotate(27.9deg); }
+    94.44% { opacity: 1; transform: translate(600px, 96px) rotate(29.6deg); }
+    100% { opacity: 0; transform: translate(640px, 118.8px) rotate(29.6deg); }
+  }
+</style>

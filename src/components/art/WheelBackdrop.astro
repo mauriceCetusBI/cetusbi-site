@@ -1,0 +1,59 @@
+---
+// Slowly spinning spoke wheel behind page heroes. Decorative.
+interface Props {
+  /** "landing" sits a little higher and brighter than on the other pages, as in the design. */
+  variant?: 'landing' | 'page';
+}
+
+const { variant = 'page' } = Astro.props;
+---
+
+<svg class:list={['wheel', variant]} viewBox="0 0 600 600" aria-hidden="true">
+  <circle cx="300" cy="300" r="292" fill="none" stroke="currentColor" stroke-width="2"></circle>
+  <circle class="inner-ring" cx="300" cy="300" r="262" fill="none" stroke="currentColor" stroke-width="1"></circle>
+  <circle cx="300" cy="300" r="160" fill="none" stroke="currentColor" stroke-width="240" stroke-dasharray="1.8 26.126"></circle>
+  <circle cx="300" cy="300" r="36" fill="none" stroke="currentColor" stroke-width="6"></circle>
+</svg>
+
+<style>
+  .wheel {
+    position: absolute;
+    z-index: 0;
+    right: -220px;
+    top: -60px;
+    width: 520px;
+    height: 520px;
+    max-width: none;
+    opacity: 0.14;
+    color: var(--accent);
+    pointer-events: none;
+    animation: spin 160s linear infinite;
+  }
+
+  /* The mobile board drops the thin inner ring. */
+  .inner-ring {
+    display: none;
+  }
+
+  @media (min-width: 720px) {
+    .wheel {
+      width: 820px;
+      height: 820px;
+    }
+
+    .inner-ring {
+      display: inline;
+    }
+
+    .landing {
+      right: -200px;
+      top: -120px;
+    }
+
+    .page {
+      right: -220px;
+      top: -160px;
+      opacity: 0.12;
+    }
+  }
+</style>

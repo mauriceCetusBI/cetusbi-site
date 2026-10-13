@@ -1,4 +1,5 @@
 @import './tokens.css';
+@import './motion.css';
 
 /* Reset */
 *,
@@ -134,7 +135,8 @@ h3 {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  min-height: 54px;
+  /* Design: 54 px content + 2 px border on each side. */
+  min-height: 58px;
   padding: 0 28px;
   border-radius: var(--radius-btn);
   border: 2px solid var(--border);
@@ -171,7 +173,7 @@ h3 {
 }
 
 .btn--sm {
-  min-height: var(--tap);
+  min-height: 48px;
   padding: 0 20px;
   border-radius: var(--radius-btn-sm);
   font-size: 15px;

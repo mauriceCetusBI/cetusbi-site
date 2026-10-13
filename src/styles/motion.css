@@ -1,0 +1,36 @@
+/* Keyframes shared across pages, copied from the design. Page-specific ones live in their component. */
+
+@keyframes draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes pop {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes sticker {
+  0% { opacity: 0; transform: scale(0) rotate(-24deg); }
+  70% { opacity: 1; transform: scale(1.15) rotate(-3deg); }
+  100% { opacity: 1; transform: scale(1) rotate(-6deg); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-1.5px); }
+}
+
+/* Staggered entrance used by hero lines: set --delay on the element. */
+.rise {
+  animation: up 0.7s ease-out var(--delay, 0s) both;
+}

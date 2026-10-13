@@ -71,6 +71,7 @@
   --ease-hover: ease;
 
   --tap: 44px;
+  --header-h: 68px;
 }
 
 /* Mobile values above match the 390 px board; desktop values from 720 px. */
@@ -80,5 +81,6 @@
     --lh-body: 1.55;
     --gutter: 40px;
     --section-pad: 104px;
+    --header-h: 96px;
   }
 }

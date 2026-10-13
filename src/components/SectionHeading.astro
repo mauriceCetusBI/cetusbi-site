@@ -1,0 +1,51 @@
+---
+// Eyebrow + H2, the opening of most sections. An optional `action` slot sits on the right
+// (e.g. "All posts →") and wraps below on small screens.
+interface Props {
+  eyebrow: string;
+  title: string;
+  id?: string;
+}
+
+const { eyebrow, title, id } = Astro.props;
+const hasAction = Astro.slots.has('action');
+---
+
+<div class:list={['section-heading', { 'with-action': hasAction }]}>
+  <div class="text">
+    <span class="eyebrow">{eyebrow}</span>
+    <h2 id={id}>{title}</h2>
+  </div>
+  {hasAction && <slot name="action" />}
+</div>
+
+<style>
+  .section-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 640px;
+  }
+
+  .eyebrow {
+    font-size: 12px;
+  }
+
+  @media (min-width: 720px) {
+    .text {
+      gap: 12px;
+    }
+
+    .eyebrow {
+      font-size: var(--fs-eyebrow);
+    }
+  }
+</style>

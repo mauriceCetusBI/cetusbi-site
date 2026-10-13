@@ -1,0 +1,32 @@
+---
+// Top section of a page. It slides up behind the transparent header, so the wheel backdrop
+// starts at the very top of the page, as on the design boards.
+import WheelBackdrop from './art/WheelBackdrop.astro';
+
+interface Props {
+  wheel?: 'landing' | 'page' | false;
+}
+
+const { wheel = 'page' } = Astro.props;
+---
+
+<section class="hero-section">
+  {wheel && <WheelBackdrop variant={wheel} />}
+  <div class="hero-content">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .hero-section {
+    position: relative;
+    overflow: hidden;
+    margin-top: calc(-1 * var(--header-h));
+    padding-top: var(--header-h);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+  }
+</style>

@@ -99,7 +99,8 @@ const isActive = (activeOn?: string) =>
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    padding-block: 12px;
+    /* Fixed height: hero sections slide up behind the header by exactly this much. */
+    min-height: var(--header-h);
   }
 
   .brand {
@@ -227,10 +228,6 @@ const isActive = (activeOn?: string) =>
   }
 
   @media (min-width: 720px) {
-    .site-header {
-      padding-block: 24px;
-    }
-
     .brand {
       gap: 12px;
     }
