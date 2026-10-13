@@ -1,5 +1,5 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
-import type { COVER_ART, PROJECT_ART } from '../content.config';
+import { SHOW_SAMPLES, type COVER_ART, type PROJECT_ART } from '../content.config';
 
 export { TAGS } from '../content.config';
 
@@ -41,8 +41,8 @@ export const tagLabel = (tags: readonly Tag[]) => tags.map((tag) => TAG_LABELS[t
 /** True for entries loaded from src/content/_samples/ (dev only). */
 export const isSample = (entry: { filePath?: string }) => !!entry.filePath?.includes('/_samples/');
 
-// Drafts show up in `astro dev` (marked as draft) and never in a production build.
-const isVisible = ({ data }: { data: { draft: boolean } }) => import.meta.env.DEV || !data.draft;
+// Drafts show up in `astro dev` (and SAMPLES=true test builds), never in a production build.
+const isVisible = ({ data }: { data: { draft: boolean } }) => SHOW_SAMPLES || !data.draft;
 
 const WORDS_PER_MINUTE = 220;
 

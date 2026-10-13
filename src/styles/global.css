@@ -68,10 +68,10 @@ a:hover {
   color: var(--text);
 }
 
+/* The outline follows each element's own border-radius, so cards keep their rounded corners. */
 :focus-visible {
   outline: 3px solid var(--accent);
   outline-offset: 3px;
-  border-radius: 4px;
 }
 
 /* Headings */

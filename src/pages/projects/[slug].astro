@@ -1,0 +1,388 @@
+---
+// Project detail page, from the project board. Optional sections (steps, screens, related
+// writing, previous/next) are left out when a project has no content for them.
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PhonePlaceholder from '../../components/PhonePlaceholder.astro';
+import ProjectHero from '../../components/ProjectHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import StepCard from '../../components/StepCard.astro';
+import { getPostsForProject, getProjects, postPath, projectPath, tagLabel, type Project } from '../../lib/content';
+import { href } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project, i) => ({
+    params: { slug: project.id },
+    props: {
+      project,
+      // Previous/next wrap around, as on the board (the first project's "previous" is the last).
+      prev: projects.length > 1 ? projects[(i - 1 + projects.length) % projects.length] : undefined,
+      next: projects.length > 2 ? projects[(i + 1) % projects.length] : undefined,
+    },
+  }));
+}
+
+interface Props {
+  project: Project;
+  prev?: Project;
+  next?: Project;
+}
+
+const { project, prev, next } = Astro.props;
+const { title, summary, why, steps, screens, stack, stackNote } = project.data;
+const { Content } = await render(project);
+const posts = await getPostsForProject(project.id);
+const buildLog = posts.find((post) => post.data.tags.includes('Build'));
+const hasBody = !!project.body?.trim();
+---
+
+<BaseLayout title={title} description={summary}>
+  <ProjectHero project={project} buildLog={buildLog} />
+
+  {
+    hasBody && (
+      <section class="band" aria-labelledby="why-title">
+        <div class="container section split">
+          <div class="split-head">
+            <span class="eyebrow">Why I built it</span>
+            <h2 id="why-title">{why ?? title}</h2>
+          </div>
+          <div class="split-body story">
+            <Content />
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    steps && (
+      <section aria-labelledby="steps-title">
+        <div class="container section stack">
+          <SectionHeading id="steps-title" eyebrow="How it works" title={steps.heading} />
+          <ol class="steps" role="list" style={`--steps: ${Math.min(steps.items.length, 4)}`}>
+            {steps.items.map((step, i) => (
+              <li>
+                <StepCard number={i + 1} title={step.title} text={step.text} icon={step.icon} />
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    screens && screens.length > 0 && (
+      <section class="band" aria-labelledby="screens-title">
+        <div class="container section stack">
+          <SectionHeading id="screens-title" eyebrow="Screens" title="A look inside." />
+          <ul class="screens" role="list">
+            {screens.map((screen) => (
+              <li>
+                <figure>
+                  <PhonePlaceholder image={screen.image} alt={screen.alt} />
+                  <figcaption>{screen.caption}</figcaption>
+                </figure>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <section aria-labelledby="stack-title">
+    <div class="container section split">
+      <div class="split-head">
+        <span class="eyebrow">Built with</span>
+        <h2 id="stack-title">The stack.</h2>
+      </div>
+      <div class="split-body">
+        {stackNote && <p class="note">{stackNote}</p>}
+        <ul class="pills" role="list">
+          {stack.map((item) => <li class="pill">{item}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  {
+    posts.length > 0 && (
+      <section aria-labelledby="related-title">
+        <div class="container related">
+          <SectionHeading id="related-title" title="Related writing.">
+            <a slot="action" class="all-posts" href={href('/writing')}>All posts →</a>
+          </SectionHeading>
+          <ul class="related-list" role="list">
+            {posts.slice(0, 2).map((post) => (
+              <li>
+                <a class="card related-card" href={href(postPath(post))}>
+                  <span class="tags">{tagLabel(post.data.tags)}</span>
+                  <h3>{post.data.title}</h3>
+                  <p>{post.data.summary}</p>
+                  <span class="read">Read post →</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    (prev || next) && (
+      <nav class="pager-wrap" aria-label="Other projects">
+        <div class="container pager">
+          {prev && (
+            <a class="pager-link" href={href(projectPath(prev))}>
+              <span class="pager-label">← Previous</span>
+              <span class="pager-title">{prev.data.title}</span>
+            </a>
+          )}
+          {next && (
+            <a class="pager-link next" href={href(projectPath(next))}>
+              <span class="pager-label">Next →</span>
+              <span class="pager-title">{next.data.title}</span>
+            </a>
+          )}
+        </div>
+      </nav>
+    )
+  }
+</BaseLayout>
+
+<style>
+  /* Two-column sections: heading left, text right (stack on narrow screens). */
+  .split {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px 56px;
+  }
+
+  .split-head {
+    flex: 1 1 320px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .split-body {
+    flex: 1.4 1 480px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .story,
+  .note {
+    font-size: 17px;
+    color: var(--text-muted);
+  }
+
+  .story :global(p + p) {
+    margin-top: 18px;
+  }
+
+  .story :global(a) {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .steps,
+  .screens,
+  .pills,
+  .related-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Stacked until 1024 px, then one row of up to four (a 2 + 1 wrap on tablet looked broken). */
+  .steps {
+    display: grid;
+    gap: 20px;
+  }
+
+  @media (min-width: 1024px) {
+    .steps {
+      grid-template-columns: repeat(var(--steps), 1fr);
+    }
+  }
+
+  .screens {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 28px;
+  }
+
+  .screens > li {
+    flex: 1 1 220px;
+    max-width: 300px;
+    min-width: 0;
+  }
+
+  figure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  figcaption {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  .pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .related {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-block: 32px 56px;
+  }
+
+  .all-posts {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap);
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  /* Grid, so a single related post keeps half the width instead of stretching. */
+  .related-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr));
+    gap: 20px;
+  }
+
+  .related-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 24px;
+    border-radius: var(--radius-card-sm);
+  }
+
+  .related-card .tags {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .related-card h3 {
+    font-size: 20px;
+    line-height: 1.25;
+  }
+
+  .related-card p {
+    font-size: 15px;
+    color: var(--text-muted);
+  }
+
+  .related-card .read {
+    margin-top: auto;
+    padding-top: 6px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .pager-wrap {
+    border-top: 1px solid var(--surface);
+  }
+
+  .pager {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 16px;
+    padding-block: 24px;
+  }
+
+  .pager-link {
+    flex: 1 1 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 20px 24px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    transition: border-color var(--dur-hover) var(--ease-hover);
+  }
+
+  .pager-link:hover {
+    color: var(--text);
+    border-color: var(--accent);
+  }
+
+  .next {
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .pager-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .pager-title {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 19px;
+  }
+
+  @media (min-width: 720px) {
+    .split-head {
+      gap: 12px;
+    }
+
+    .story,
+    .note {
+      font-size: 18px;
+    }
+
+    .stack {
+      gap: 40px;
+    }
+
+    .related {
+      gap: 32px;
+      padding-block: 48px 104px;
+    }
+
+    .related-list {
+      gap: 24px;
+    }
+
+    .pager {
+      padding-block: 40px;
+    }
+  }
+</style>
