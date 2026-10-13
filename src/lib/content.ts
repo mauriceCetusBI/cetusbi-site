@@ -1,9 +1,32 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
+import type { COVER_ART, PROJECT_ART } from '../content.config';
 
 export type Post = CollectionEntry<'posts'>;
 export type Project = CollectionEntry<'projects'>;
 export type Goal = CollectionEntry<'goals'>;
 export type Tag = Post['data']['tags'][number];
+export type CoverArtVariant = (typeof COVER_ART)[number];
+export type ProjectArtVariant = (typeof PROJECT_ART)[number];
+
+/** Art used when a post sets no cover: one per first tag. */
+const DEFAULT_ART: Record<Tag, CoverArtVariant> = { Ride: 'climb', Data: 'layers', Build: 'code' };
+
+/** The cover of a post: its image, its chosen art, or the default art for its first tag. */
+export function coverOf(post: Post) {
+  const { cover, tags } = post.data;
+  if (cover && 'image' in cover) return { kind: 'image' as const, image: cover.image, alt: cover.alt };
+  return { kind: 'art' as const, art: cover?.art ?? DEFAULT_ART[tags[0]!] };
+}
+
+/** Post detail URL path (before the base path is added). */
+export const postPath = (post: Post) => `/writing/${post.id}`;
+export const projectPath = (project: Project) => `/projects/${project.id}`;
+
+const NEW_FOR_DAYS = 30;
+
+/** "New" badge: published within the last 30 days of the build. */
+export const isNew = (post: Post, now = new Date()) =>
+  now.getTime() - post.data.date.getTime() < NEW_FOR_DAYS * 24 * 60 * 60 * 1000;
 
 export const TAG_LABELS: Record<Tag, string> = {
   Ride: 'Ride',

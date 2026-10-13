@@ -1,0 +1,106 @@
+---
+import EmptyState from '../EmptyState.astro';
+import FeaturedPost from '../FeaturedPost.astro';
+import PostCard from '../PostCard.astro';
+import SectionHeading from '../SectionHeading.astro';
+import { getPosts } from '../../lib/content';
+import { href } from '../../lib/site';
+
+const posts = await getPosts();
+const [featured, ...rest] = posts;
+const more = rest.slice(0, 2);
+---
+
+<section id="writing" aria-labelledby="writing-title">
+  <div class="container section writing">
+    <SectionHeading id="writing-title" eyebrow="Latest writing" title="Fresh off the road.">
+      {posts.length > 0 && <a slot="action" class="all-posts desktop" href={href('/writing')}>All posts →</a>}
+    </SectionHeading>
+
+    {
+      featured ? (
+        <div class="posts">
+          <div class="featured-wrap">
+            <FeaturedPost post={featured} />
+          </div>
+          {more.length > 0 && (
+            <div class="more">
+              {more.map((post) => (
+                <div class="more-item">
+                  <PostCard post={post} />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ) : (
+        <EmptyState title="First posts are on their way." text="Ride write-ups and build logs land here soon." />
+      )
+    }
+
+    {posts.length > 0 && <a class="all-posts mobile" href={href('/writing')}>All posts →</a>}
+  </div>
+</section>
+
+<style>
+  .writing {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .posts,
+  .more {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .all-posts {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap);
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .all-posts.desktop {
+    display: none;
+  }
+
+  @media (min-width: 720px) {
+    .writing {
+      gap: 40px;
+    }
+
+    .posts {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: stretch;
+      gap: 24px;
+    }
+
+    .featured-wrap {
+      flex: 1.4 1 560px;
+      min-width: 0;
+    }
+
+    .more {
+      flex: 1 1 340px;
+      min-width: 0;
+      gap: 24px;
+    }
+
+    .more-item {
+      flex: 1;
+    }
+
+    .all-posts.desktop {
+      display: inline-flex;
+    }
+
+    .all-posts.mobile {
+      display: none;
+    }
+  }
+</style>

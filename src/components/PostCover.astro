@@ -1,0 +1,33 @@
+---
+// Fills its parent with the post's photo or generated art. The parent sets size and background.
+import { Image } from 'astro:assets';
+import CoverArt from './art/CoverArt.astro';
+import { coverOf, type Post } from '../lib/content';
+
+interface Props {
+  post: Post;
+  size: 'wide' | 'card' | 'thumb';
+  /** `sizes` attribute for photos. */
+  sizes?: string;
+}
+
+const { post, size, sizes = '100vw' } = Astro.props;
+const cover = coverOf(post);
+const widths = size === 'thumb' ? [96, 192, 264] : [400, 700, 1000, 1400];
+---
+
+{
+  cover.kind === 'image' ? (
+    <Image class="post-cover-img" src={cover.image} alt={cover.alt} widths={widths} sizes={sizes} />
+  ) : (
+    <CoverArt variant={cover.art} size={size} />
+  )
+}
+
+<style>
+  .post-cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>

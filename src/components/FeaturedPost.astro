@@ -1,0 +1,123 @@
+---
+// The newest post, large. Landing layout: cover on top, text below.
+import PostCover from './PostCover.astro';
+import { isNew, postPath, tagLabel, type Post } from '../lib/content';
+import { href } from '../lib/site';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+---
+
+<a class:list={['card', 'featured']} href={href(postPath(post))}>
+  <div class="cover">
+    <PostCover post={post} size="wide" sizes="(min-width: 1200px) 640px, 100vw" />
+    {isNew(post) && <span class="new">New</span>}
+  </div>
+  <div class="body">
+    <span class="tags">{tagLabel(post.data.tags)}</span>
+    <h3>{post.data.title}</h3>
+    <p class="summary">{post.data.summary}</p>
+    <span class="read">Read post →</span>
+  </div>
+</a>
+
+<style>
+  .featured {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: var(--radius-card-sm);
+  }
+
+  .cover {
+    position: relative;
+    height: 190px;
+    background: var(--bg);
+  }
+
+  .new {
+    position: absolute;
+    left: 14px;
+    top: 14px;
+    padding: 5px 10px;
+    border-radius: var(--radius-pill);
+    background: var(--yellow);
+    color: var(--on-accent);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px;
+  }
+
+  .tags {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  h3 {
+    font-size: 22px;
+    line-height: 1.15;
+  }
+
+  .summary {
+    font-size: 15px;
+    color: var(--text-muted);
+  }
+
+  .read {
+    display: none;
+  }
+
+  @media (min-width: 720px) {
+    .featured {
+      border-radius: var(--radius-card);
+    }
+
+    .cover {
+      height: 300px;
+    }
+
+    .new {
+      left: 20px;
+      top: 20px;
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+
+    .body {
+      gap: 12px;
+      padding: 28px;
+    }
+
+    h3 {
+      font-size: 28px;
+      letter-spacing: -0.01em;
+    }
+
+    .summary {
+      font-size: 16px;
+    }
+
+    .read {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--tap);
+      font-weight: 700;
+      color: var(--accent);
+    }
+  }
+</style>

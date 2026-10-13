@@ -4,6 +4,9 @@ import HeroSection from '../components/HeroSection.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import Squiggle from '../components/Squiggle.astro';
 import RideProfileAnimation from '../components/art/RideProfileAnimation.astro';
+import AboutTeaser from '../components/landing/AboutTeaser.astro';
+import LatestWriting from '../components/landing/LatestWriting.astro';
+import ProjectsSection from '../components/landing/ProjectsSection.astro';
 import { href } from '../lib/site';
 
 const topics = [
@@ -112,6 +115,10 @@ const topics = [
       </ul>
     </div>
   </section>
+
+  <LatestWriting />
+  <ProjectsSection />
+  <AboutTeaser />
 </BaseLayout>
 
 <style>

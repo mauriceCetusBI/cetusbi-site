@@ -1,0 +1,172 @@
+---
+// Illustration panels for project cards, ported from the landing board. Decorative.
+import type { ProjectArtVariant } from '../../lib/content';
+
+interface Props {
+  variant: ProjectArtVariant;
+}
+
+const { variant } = Astro.props;
+
+const wear = [
+  { part: 'Cassette', state: 'Replace now', pct: 100, color: 'var(--red)' },
+  { part: 'Chain', state: 'Replace soon', pct: 82, color: 'var(--yellow)' },
+  { part: 'Front tire', state: 'Good', pct: 31, color: 'var(--green-3)' },
+];
+
+const bars = [
+  { h: 40, c: 'var(--accent)' },
+  { h: 65, c: 'var(--green-1)' },
+  { h: 50, c: 'var(--green-2)' },
+  { h: 90, c: 'var(--yellow)' },
+  { h: 70, c: 'var(--green-2)' },
+  { h: 55, c: 'var(--green-1)' },
+  { h: 35, c: 'var(--accent)' },
+];
+---
+
+<div class:list={['art', variant]} aria-hidden="true">
+  {
+    variant === 'wear' &&
+      wear.map((row) => (
+        <div class="wear-row">
+          <div class="wear-label">
+            <span>{row.part}</span>
+            <span style={`color: ${row.color}`}>{row.state}</span>
+          </div>
+          <div class="track">
+            <div style={`width: ${row.pct}%; background: ${row.color}`} />
+          </div>
+        </div>
+      ))
+  }
+
+  {
+    variant === 'bars' && (
+      <>
+        <div class="bars-chart">
+          {bars.map((bar) => (
+            <div style={`height: ${bar.h}%; background: ${bar.c}`} />
+          ))}
+        </div>
+        <div class="rule" />
+        <div class="caption">
+          <span>Ride by ride</span>
+          <span>Power BI</span>
+        </div>
+      </>
+    )
+  }
+
+  {
+    variant === 'fuel' && (
+      <>
+        <div class="chips">
+          <span class="chip on">Carbs</span>
+          <span class="chip">Fluid</span>
+          <span class="chip">Sodium</span>
+        </div>
+        <div class="track fuel-track">
+          <div style="width: 64%; background: var(--green-3)" />
+        </div>
+        <div class="caption">
+          <span>On the bike</span>
+          <span>Garmin widget</span>
+        </div>
+      </>
+    )
+  }
+</div>
+
+<style>
+  .art {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 18px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+  }
+
+  .bars {
+    gap: 12px;
+  }
+
+  .wear-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .wear-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .track {
+    height: 7px;
+    border-radius: 4px;
+    background: var(--track);
+    overflow: hidden;
+  }
+
+  .track > div {
+    height: 100%;
+  }
+
+  .fuel-track {
+    height: 10px;
+    border-radius: 5px;
+  }
+
+  .bars-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    height: 104px;
+  }
+
+  .bars-chart > div {
+    flex: 1;
+    border-radius: 6px 6px 2px 2px;
+  }
+
+  .rule {
+    height: 1px;
+    background: var(--border);
+  }
+
+  .caption {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .chip {
+    padding: 6px 12px;
+    border-radius: var(--radius-pill);
+    border: 1.5px solid var(--text-subtle);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .chip.on {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--on-accent);
+    font-weight: 700;
+  }
+</style>

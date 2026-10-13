@@ -1,0 +1,130 @@
+---
+// Project card for the landing page. On mobile only the first card keeps its illustration,
+// as on the 390 board; the others show title and summary.
+import ProjectArt from './art/ProjectArt.astro';
+import { projectPath, type Project } from '../lib/content';
+import { href } from '../lib/site';
+
+interface Props {
+  project: Project;
+  /** First card: keeps its illustration on mobile. */
+  lead?: boolean;
+}
+
+const { project, lead = false } = Astro.props;
+const { title, summary, tags, art } = project.data;
+---
+
+<a class:list={['card', 'project', { lead }]} href={href(projectPath(project))}>
+  {art && <div class="art-wrap"><ProjectArt variant={art} /></div>}
+  <h3>{title}</h3>
+  <p class="summary">{summary}</p>
+  <ul class="tags" role="list">
+    {tags.map((tag) => <li class="pill">{tag}</li>)}
+  </ul>
+</a>
+
+<style>
+  .project {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px;
+    border-radius: var(--radius-card-sm);
+  }
+
+  .lead {
+    gap: 12px;
+  }
+
+  /* Mobile: no illustration except on the lead card, where it sits without its panel
+     and shows two wear rows. */
+  .art-wrap {
+    display: none;
+  }
+
+  .lead .art-wrap {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .lead .art-wrap :global(.art) {
+    padding: 0;
+    gap: 12px;
+    background: none;
+    border: 0;
+  }
+
+  .lead .art-wrap :global(.wear-row:nth-child(n + 3)) {
+    display: none;
+  }
+
+  .lead .art-wrap :global(.wear-label) {
+    font-size: 13px;
+  }
+
+  h3 {
+    font-size: 20px;
+  }
+
+  .summary {
+    font-size: 15px;
+    color: var(--text-muted);
+  }
+
+  .tags {
+    display: none;
+    margin: auto 0 0;
+    padding: 0;
+    list-style: none;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  @media (min-width: 720px) {
+    .project,
+    .lead {
+      gap: 20px;
+      padding: 28px;
+      border-radius: var(--radius-card);
+    }
+
+    .art-wrap,
+    .lead .art-wrap {
+      display: block;
+      margin-bottom: 0;
+    }
+
+    .lead .art-wrap :global(.art) {
+      padding: 18px;
+      gap: 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+    }
+
+    .lead .art-wrap :global(.bars) {
+      gap: 12px;
+    }
+
+    .lead .art-wrap :global(.wear-row:nth-child(n + 3)) {
+      display: flex;
+    }
+
+    .lead .art-wrap :global(.wear-label) {
+      font-size: 14px;
+    }
+
+    h3 {
+      font-size: 24px;
+    }
+
+    .summary {
+      font-size: 16px;
+    }
+
+    .tags {
+      display: flex;
+    }
+  }
+</style>

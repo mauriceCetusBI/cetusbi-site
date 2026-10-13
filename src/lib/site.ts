@@ -33,4 +33,12 @@ export const NAV: NavItem[] = [
   { label: 'About', path: '/about', activeOn: '/about' },
 ];
 
+export interface SocialLink {
+  label: string;
+  url: string;
+}
+
+// Only links with a real URL are shown; an empty list renders no buttons at all.
+export const SOCIAL: SocialLink[] = [];
+
 export const CONTACT_PATH = '/about#contact';

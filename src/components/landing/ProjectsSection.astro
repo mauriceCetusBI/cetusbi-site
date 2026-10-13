@@ -1,0 +1,67 @@
+---
+import EmptyState from '../EmptyState.astro';
+import ProjectCard from '../ProjectCard.astro';
+import SectionHeading from '../SectionHeading.astro';
+import { getProjects } from '../../lib/content';
+
+const projects = await getProjects();
+---
+
+<section id="projects" class="band" aria-labelledby="projects-title">
+  <div class="container section projects">
+    <SectionHeading id="projects-title" eyebrow="Projects" title="Things I've built for my own rides." />
+    {
+      projects.length > 0 ? (
+        <ul class="list" role="list">
+          {projects.map((project, i) => (
+            <li>
+              <ProjectCard project={project} lead={i === 0} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <EmptyState title="Projects are coming." text="Build logs and tools will show up here." />
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .projects {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  @media (min-width: 720px) {
+    .projects {
+      gap: 40px;
+    }
+
+    .list {
+      gap: 24px;
+    }
+  }
+
+  /* Three across from 1024 px. The board wraps 2 + 1 at 1440 because of content-box
+     padding; three across matches the topics row above. */
+  @media (min-width: 1024px) {
+    .list {
+      flex-direction: row;
+    }
+
+    .list > li {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+  }
+</style>

@@ -1,0 +1,62 @@
+---
+// Generated cover art for posts without a photo, ported from the design boards.
+// Mint parts use currentColor (= --accent); the other chart colors are fixed.
+import type { CoverArtVariant } from '../../lib/content';
+
+interface Props {
+  variant: CoverArtVariant;
+  /** wide: featured cover (600×300); card: grid card (300×180); thumb: small square tile. */
+  size: 'wide' | 'card' | 'thumb';
+}
+
+const { variant, size } = Astro.props;
+
+const M = 'currentColor';
+
+// Wide route art (landing featured post).
+const ROUTE_WIDE = `<g stroke="#34505F" stroke-width="1"><line x1="0" y1="75" x2="600" y2="75"/><line x1="0" y1="150" x2="600" y2="150"/><line x1="0" y1="225" x2="600" y2="225"/><line x1="150" y1="0" x2="150" y2="300"/><line x1="300" y1="0" x2="300" y2="300"/><line x1="450" y1="0" x2="450" y2="300"/></g><circle cx="360" cy="150" r="120" fill="none" stroke="#34505F"/><circle cx="360" cy="150" r="80" fill="none" stroke="#34505F"/><circle cx="360" cy="150" r="40" fill="none" stroke="#34505F"/><polyline points="50,240 110,215 160,250 225,190 280,205 340,130 400,150 455,95 520,115 565,55" fill="none" stroke="${M}" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="50" cy="240" r="8" fill="${M}"/><circle cx="565" cy="55" r="9" fill="#E3B341" stroke="#141F27" stroke-width="3"/>`;
+
+// 300×180 card art (Writing overview grid).
+const CARD: Record<Exclude<CoverArtVariant, 'route'>, string> = {
+  bars: `<rect x="60" y="95" width="26" height="60" rx="5" fill="${M}"/><rect x="100" y="65" width="26" height="90" rx="5" fill="#7FD3A2"/><rect x="140" y="40" width="26" height="115" rx="5" fill="#5CC488"/><rect x="180" y="75" width="26" height="80" rx="5" fill="#E3B341"/><rect x="220" y="55" width="26" height="100" rx="5" fill="#7FD3A2"/>`,
+  layers: `<path d="M150 30 L225 70 L150 110 L75 70 Z" fill="${M}"/><path d="M75 92 L150 132 L225 92" fill="none" stroke="#5CC488" stroke-width="9" stroke-linejoin="round"/><path d="M75 114 L150 154 L225 114" fill="none" stroke="#4CB97A" stroke-width="9" stroke-linejoin="round"/>`,
+  gauge: `<path d="M70 135 A80 80 0 0 1 230 135" fill="none" stroke="#2C4455" stroke-width="16" stroke-linecap="round"/><path d="M70 135 A80 80 0 0 1 205 78" fill="none" stroke="${M}" stroke-width="16" stroke-linecap="round"/><line x1="150" y1="135" x2="200" y2="92" stroke="#E3B341" stroke-width="5" stroke-linecap="round"/><circle cx="150" cy="135" r="9" fill="#F8F8FF"/>`,
+  code: `<polyline points="105,65 65,100 105,135" fill="none" stroke="${M}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><polyline points="195,65 235,100 195,135" fill="none" stroke="${M}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><line x1="170" y1="52" x2="130" y2="148" stroke="#E3B341" stroke-width="9" stroke-linecap="round"/>`,
+  climb: `<path d="M0 150 C50 145 80 120 120 110 C160 100 175 60 215 52 C250 46 275 70 300 80 L300 180 L0 180 Z" fill="#223443"/><path d="M0 150 C50 145 80 120 120 110 C160 100 175 60 215 52 C250 46 275 70 300 80" fill="none" stroke="${M}" stroke-width="5" stroke-linecap="round"/><circle cx="215" cy="52" r="8" fill="#E3B341" stroke="#141F27" stroke-width="3"/>`,
+  chart: `<g stroke="#34505F"><line x1="0" y1="50" x2="300" y2="50"/><line x1="0" y1="100" x2="300" y2="100"/><line x1="100" y1="0" x2="100" y2="180"/><line x1="200" y1="0" x2="200" y2="180"/></g><polyline points="30,140 70,120 100,150 140,100 180,110 220,60 270,40" fill="none" stroke="${M}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="30" cy="140" r="6" fill="${M}"/><circle cx="270" cy="40" r="7" fill="#E3B341" stroke="#141F27" stroke-width="3"/>`,
+};
+
+// 100×100 thumbnails drawn in the design (landing small cards, "Keep reading").
+const THUMB: Partial<Record<CoverArtVariant, string>> = {
+  bars: `<rect x="12" y="52" width="14" height="36" rx="4" fill="${M}"/><rect x="32" y="36" width="14" height="52" rx="4" fill="#7FD3A2"/><rect x="52" y="24" width="14" height="64" rx="4" fill="#5CC488"/><rect x="72" y="42" width="14" height="46" rx="4" fill="#E3B341"/>`,
+  layers: `<path d="M50 14 L88 34 L50 54 L12 34 Z" fill="${M}"/><path d="M12 48 L50 68 L88 48" fill="none" stroke="#5CC488" stroke-width="7" stroke-linejoin="round"/><path d="M12 64 L50 84 L88 64" fill="none" stroke="#4CB97A" stroke-width="7" stroke-linejoin="round"/>`,
+};
+
+// Variants without a drawn thumbnail reuse the card art, cropped to its subject.
+let viewBox: string;
+let body: string;
+let fit = 'xMidYMid slice';
+
+if (size === 'thumb' && THUMB[variant]) {
+  viewBox = '0 0 100 100';
+  body = THUMB[variant]!;
+} else if (variant === 'route') {
+  viewBox = size === 'thumb' ? '40 40 540 230' : '0 0 600 300';
+  body = ROUTE_WIDE;
+  if (size === 'thumb') fit = 'xMidYMid meet';
+} else {
+  viewBox = size === 'thumb' ? '55 25 190 140' : '0 0 300 180';
+  body = CARD[variant];
+  if (size === 'thumb') fit = 'xMidYMid meet';
+}
+---
+
+<svg class:list={['cover-art', size]} viewBox={viewBox} preserveAspectRatio={fit} aria-hidden="true" set:html={body} />
+
+<style>
+  .cover-art {
+    color: var(--accent);
+    width: 100%;
+    height: 100%;
+  }
+</style>

@@ -1,0 +1,144 @@
+---
+// "Hi, I'm Maurice." block. No photo yet: the tile shows only the wheel pattern
+// (the design's "[Your photo]" placeholder text is never shipped).
+import { SOCIAL } from '../../lib/site';
+---
+
+<section id="about" aria-labelledby="about-title">
+  <div class="container about">
+    <div class="photo" aria-hidden="true">
+      <svg viewBox="0 0 400 400">
+        <circle cx="200" cy="200" r="140" fill="none" stroke="#34505F" stroke-width="2"></circle>
+        <circle cx="200" cy="200" r="90" fill="none" stroke="currentColor" stroke-width="150" stroke-dasharray="1.6 17.1" opacity=".25"></circle>
+      </svg>
+    </div>
+    <div class="text">
+      <span class="eyebrow">About</span>
+      <h2 id="about-title">Hi, I'm Maurice.</h2>
+      <p>
+        By day I'm a data engineer, building Microsoft Fabric and Azure Databricks platforms for
+        clients. Outside work I ride, measure everything and turn it into dashboards, tools and
+        stories.
+      </p>
+      <p class="extra">
+        This site is where those two worlds meet. Expect honest build logs, ride write-ups and the
+        occasional GIF.
+      </p>
+      {
+        SOCIAL.length > 0 && (
+          <ul class="links" role="list">
+            {SOCIAL.map((link) => (
+              <li>
+                <a class="btn btn--sm" href={link.url} rel="me">
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Mobile: small photo tile next to the heading, as on the 390 board. */
+  .about {
+    display: grid;
+    grid-template-columns: 84px 1fr;
+    align-items: center;
+    gap: 18px 16px;
+    padding-block: 56px;
+  }
+
+  .photo {
+    position: relative;
+    width: 84px;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 24px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--accent);
+  }
+
+  .photo svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+  }
+
+  /* On mobile the heading sits beside the tile and the rest flows below both. */
+  .text {
+    display: contents;
+  }
+
+  .eyebrow,
+  .extra {
+    display: none;
+  }
+
+  h2 {
+    font-size: 28px;
+  }
+
+  p,
+  .links {
+    grid-column: 1 / -1;
+    color: var(--text-muted);
+  }
+
+  .links {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  @media (min-width: 720px) {
+    .about {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 56px;
+      padding-block: 112px;
+    }
+
+    .photo {
+      flex: 0 1 380px;
+      width: 100%;
+      max-width: 380px;
+      border-radius: 32px;
+    }
+
+    .text {
+      flex: 1 1 440px;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .eyebrow,
+    .extra {
+      display: block;
+    }
+
+    h2 {
+      font-size: var(--fs-h2);
+    }
+
+    p {
+      max-width: 560px;
+    }
+
+    .links {
+      gap: 12px;
+      margin-top: 4px;
+    }
+  }
+</style>
