@@ -9,13 +9,15 @@ interface Props {
   /** Page title; the site name is appended. Omit on the landing page. */
   title?: string;
   description?: string;
+  /** Keeps the page out of search results and drops the canonical URL (e.g. the 404 page). */
+  noindex?: boolean;
 }
 
-const { title, description = SITE.description } = Astro.props;
+const { title, description = SITE.description, noindex = false } = Astro.props;
 const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name}: where cycling meets data`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 // Only the production domain gets indexed; previews and local builds stay out of search results.
-const indexable = Astro.site?.hostname === SITE.domain;
+const indexable = !noindex && Astro.site?.hostname === SITE.domain;
 ---
 
 <!doctype html>
@@ -25,7 +27,7 @@ const indexable = Astro.site?.hostname === SITE.domain;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {!noindex && <link rel="canonical" href={canonical} />}
     {!indexable && <meta name="robots" content="noindex" />}
     <meta name="theme-color" content="#141F27" />
     <link rel="icon" href={href('/favicon.svg')} type="image/svg+xml" />

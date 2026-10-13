@@ -1,0 +1,368 @@
+---
+// 404 card: a cyclist rides the known route, hits a barrier and flies off the edge.
+// SVG and keyframes are ported as-is from the design. Mint parts use currentColor (= --accent).
+// With reduced motion the rider is hidden and everything else shows its final state.
+import Sticker from '../Sticker.astro';
+
+const ROUTE =
+  'M0 240 C60 230 90 200 140 190 C190 180 210 120 270 110 C320 100 340 150 390 140 C440 130 470 80 520 70 C555 64 580 86 600 96';
+---
+
+<div class="nf-card">
+  <Sticker delay={4.3}>Oops. Off route.</Sticker>
+
+  <div class="card-head">
+    <span class="card-title">Route</span>
+    <span class="legend">
+      <span><i style="background: var(--accent)"></i>Known road</span>
+      <span><i style="background: var(--red)"></i>Nothing here</span>
+    </span>
+  </div>
+
+  <svg class="chart" viewBox="0 0 600 300" role="img" aria-label="Animation: a cyclist rides along a route, hits a road barrier and flies off the edge">
+    <defs>
+      <linearGradient id="nf-elev" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="currentColor" stop-opacity=".45"></stop>
+        <stop offset="1" stop-color="currentColor" stop-opacity="0"></stop>
+      </linearGradient>
+      <clipPath id="nf-known"><path d="M0 0 H392 V300 H0 Z"></path></clipPath>
+    </defs>
+
+    <g stroke="#34505F" stroke-dasharray="4 6">
+      <line x1="0" y1="60" x2="600" y2="60"></line>
+      <line x1="0" y1="120" x2="600" y2="120"></line>
+      <line x1="0" y1="180" x2="600" y2="180"></line>
+      <line x1="0" y1="240" x2="600" y2="240"></line>
+    </g>
+
+    <g clip-path="url(#nf-known)">
+      <path class="fill" d={`${ROUTE} L600 270 L0 270 Z`} fill="url(#nf-elev)"></path>
+    </g>
+    <path class="known" pathLength="1" d="M0 240 C60 230 90 200 140 190 C190 180 210 120 270 110 C320 100 340 150 390 140" fill="none" stroke="currentColor" stroke-dasharray="1"></path>
+    <path class="unknown" d="M400 138 C440 130 470 80 520 70 C555 64 580 86 600 96" fill="none" stroke="#F07A7A" stroke-dasharray="3 9" stroke-linecap="round" opacity=".55"></path>
+
+    <g class="barrier-in">
+      <g class="barrier">
+        <line x1="397" y1="142" x2="397" y2="116" stroke="#A9BCC8" stroke-width="3" stroke-linecap="round"></line>
+        <line x1="417" y1="138" x2="417" y2="112" stroke="#A9BCC8" stroke-width="3" stroke-linecap="round"></line>
+        <rect x="391" y="112" width="32" height="10" rx="2" fill="#E3B341" transform="rotate(-8 407 117)"></rect>
+        <g stroke="#141F27" stroke-width="3" transform="rotate(-8 407 117)"><line x1="397" y1="123" x2="401" y2="111"></line><line x1="405" y1="123" x2="409" y2="111"></line><line x1="413" y1="123" x2="417" y2="111"></line></g>
+      </g>
+    </g>
+
+    <g class="qmark">
+      <circle cx="520" cy="56" r="16" fill="#141F27" stroke="#F07A7A" stroke-width="2"></circle>
+      <text x="520" y="63" text-anchor="middle" font-size="20" font-weight="900" fill="#F07A7A" font-family="'Montserrat',-apple-system,sans-serif">?</text>
+    </g>
+
+    <g class="rider">
+      <g class="rider-scale">
+        <g class="wheel-spin"><circle cx="-15" cy="-10" r="10" fill="none" stroke="#F8F8FF" stroke-width="2"></circle><line x1="-25" y1="-10" x2="-5" y2="-10" stroke="#A9BCC8" stroke-width="1"></line><line x1="-15" y1="-20" x2="-15" y2="0" stroke="#A9BCC8" stroke-width="1"></line></g>
+        <g class="wheel-spin"><circle cx="15" cy="-10" r="10" fill="none" stroke="#F8F8FF" stroke-width="2"></circle><line x1="5" y1="-10" x2="25" y2="-10" stroke="#A9BCC8" stroke-width="1"></line><line x1="15" y1="-20" x2="15" y2="0" stroke="#A9BCC8" stroke-width="1"></line></g>
+        <g stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"><line x1="-15" y1="-10" x2="0" y2="-10"></line><line x1="0" y1="-10" x2="-5" y2="-25"></line><line x1="-5" y1="-25" x2="11" y2="-24"></line><line x1="11" y1="-24" x2="15" y2="-10"></line><line x1="0" y1="-10" x2="11" y2="-24"></line><line x1="-15" y1="-10" x2="-5" y2="-25"></line><line x1="11" y1="-24" x2="13" y2="-27"></line></g>
+        <line x1="-9" y1="-26" x2="-2" y2="-26" stroke="#F8F8FF" stroke-width="2" stroke-linecap="round"></line>
+        <g class="bob">
+          <line x1="-5" y1="-27" x2="6" y2="-37" stroke="#E3B341" stroke-width="5" stroke-linecap="round"></line>
+          <polyline points="-5,-27 3,-19 2,-10" fill="none" stroke="#F8F8FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+          <line x1="6" y1="-36" x2="12" y2="-26" stroke="#F8F8FF" stroke-width="2.6" stroke-linecap="round"></line>
+          <circle cx="10" cy="-42" r="4.2" fill="#F8F8FF"></circle>
+          <path d="M5.6 -43 A4.6 4.6 0 0 1 14.4 -43 Z" fill="#F07A7A"></path>
+        </g>
+      </g>
+    </g>
+
+    <g class="axis-labels">
+      <text x="2" y="292" font-size="12" fill="#A9BCC8" font-family="-apple-system,BlinkMacSystemFont,sans-serif">Start</text>
+      <text x="598" y="292" text-anchor="end" font-size="12" fill="#F07A7A" font-family="-apple-system,BlinkMacSystemFont,sans-serif">Finish: unknown</text>
+    </g>
+  </svg>
+
+  <div class="tiles">
+    <div class="tile">
+      <span class="tile-label">GPS says</span>
+      <span class="tile-value">Recalculating<span class="dot" aria-hidden="true">.</span><span class="dot" aria-hidden="true">.</span><span class="dot" aria-hidden="true">.</span></span>
+    </div>
+    <div class="tile">
+      <span class="tile-label">Status</span>
+      <span class="tile-value error">404 · Page not found</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .nf-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 14px;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card-sm);
+    color: var(--accent);
+  }
+
+  .nf-card > :global(.sticker) {
+    right: 10px;
+    top: -16px;
+  }
+
+  .card-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .card-title {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 16px;
+    color: var(--text);
+  }
+
+  .legend {
+    display: flex;
+    gap: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  .legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .legend i {
+    display: block;
+    width: 9px;
+    height: 9px;
+    border-radius: 3px;
+  }
+
+  .chart {
+    width: 100%;
+    height: auto;
+  }
+
+  .known,
+  .unknown {
+    stroke-width: 4;
+  }
+
+  /* Timeline: route draws 0.95–4.15 s, barrier pops in at 1.2 s, the rider loops every 7 s
+     and flips the barrier on each pass; unknown road, question mark and sticker at ~4.2 s. */
+  .fill {
+    animation: fade 1s ease 0.9s both;
+  }
+
+  .known {
+    animation: draw 3.2s linear 0.95s both;
+  }
+
+  .unknown {
+    animation: fade 0.6s ease 4.1s both;
+  }
+
+  .barrier-in {
+    animation: pop 0.5s ease-out 1.2s both;
+  }
+
+  .barrier {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: barrier 7s linear 0.7s infinite;
+  }
+
+  .qmark {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: qmark 0.6s cubic-bezier(0.3, 1.5, 0.5, 1) 4.2s both;
+  }
+
+  .rider {
+    opacity: 0;
+    transform-origin: 0 0;
+    animation: ride404 7s linear 0.7s infinite both;
+  }
+
+  .rider-scale {
+    transform: scale(2);
+  }
+
+  .wheel-spin {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: spin 0.5s linear infinite;
+  }
+
+  .bob {
+    animation: bob 0.4s ease-in-out infinite;
+  }
+
+  /* Too small to read at phone width; the Status tile says the same. */
+  .axis-labels {
+    display: none;
+  }
+
+  .tiles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    animation: up 0.6s ease-out 3.4s both;
+  }
+
+  .tile {
+    flex: 1 1 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-inner);
+  }
+
+  .tile-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .tile-value {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .error {
+    color: var(--red);
+  }
+
+  .dot {
+    animation: blink 1.4s infinite;
+  }
+
+  .dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rider {
+      display: none;
+    }
+  }
+
+  @media (min-width: 720px) {
+    .nf-card {
+      gap: 18px;
+      margin-top: 0;
+      padding: 24px;
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-card);
+    }
+
+    .nf-card > :global(.sticker) {
+      right: -10px;
+      top: -18px;
+    }
+
+    .card-head {
+      gap: 10px;
+    }
+
+    .card-title {
+      font-size: 18px;
+    }
+
+    .legend {
+      gap: 16px;
+      font-size: 13px;
+    }
+
+    .legend span {
+      gap: 6px;
+    }
+
+    .legend i {
+      width: 10px;
+      height: 10px;
+    }
+
+    .known,
+    .unknown {
+      stroke-width: 2.5;
+    }
+
+    .rider-scale {
+      transform: scale(1.5);
+    }
+
+    .axis-labels {
+      display: inline;
+    }
+  }
+
+  @keyframes fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes blink {
+    0%, 80%, 100% { opacity: 0.25; }
+    40% { opacity: 1; }
+  }
+
+  @keyframes qmark {
+    0% { opacity: 0; transform: scale(0) rotate(-30deg); }
+    60% { opacity: 1; transform: scale(1.25) rotate(8deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0); }
+  }
+
+  @keyframes barrier {
+    0%, 52% { transform: rotate(0); }
+    58% { transform: rotate(-24deg) translate(0, -4px); }
+    100% { transform: rotate(-24deg) translate(0, -4px); }
+  }
+
+  @keyframes ride404 {
+    0% { opacity: 1; transform: translate(-30px, 233.7px) rotate(-11.8deg); }
+    4.11% { transform: translate(0px, 240px) rotate(-11.8deg); }
+    6.85% { transform: translate(27px, 233.7px) rotate(-16.6deg); }
+    9.59% { transform: translate(53.1px, 224.3px) rotate(-22.5deg); }
+    12.34% { transform: translate(78.4px, 212.8px) rotate(-24.9deg); }
+    15.07% { transform: translate(103.7px, 201.4px) rotate(-22.1deg); }
+    17.81% { transform: translate(129.9px, 192.3px) rotate(-15.6deg); }
+    20.56% { transform: translate(156.5px, 184.6px) rotate(-24.3deg); }
+    23.3% { transform: translate(179.7px, 169.4px) rotate(-38.6deg); }
+    26.04% { transform: translate(200.3px, 150.9px) rotate(-42.5deg); }
+    28.78% { transform: translate(221.2px, 132.6px) rotate(-37.3deg); }
+    31.52% { transform: translate(244.7px, 117.9px) rotate(-24.8deg); }
+    34.26% { transform: translate(271.2px, 109.8px) rotate(-8.4deg); }
+    37% { transform: translate(298.7px, 110.7px) rotate(13.6deg); }
+    39.74% { transform: translate(324.1px, 121.7px) rotate(27.7deg); }
+    42.48% { transform: translate(348.6px, 134.8px) rotate(22.7deg); }
+    45.22% { transform: translate(375.4px, 141.3px) rotate(1.6deg); }
+    48% { transform: translate(398px, 128px) rotate(-14deg); }
+    50.5% { transform: translate(418px, 108px) rotate(-26deg); }
+    53% { transform: translate(442px, 104px) rotate(-4deg); }
+    55.5% { transform: translate(466px, 126px) rotate(28deg); }
+    58% { transform: translate(490px, 176px) rotate(70deg); }
+    61% { transform: translate(516px, 262px) rotate(125deg); }
+    64% { transform: translate(540px, 360px) rotate(190deg); }
+    65% { opacity: 0; transform: translate(548px, 390px) rotate(200deg); }
+    100% { opacity: 0; transform: translate(-30px, 233.7px) rotate(-11.8deg); }
+  }
+</style>

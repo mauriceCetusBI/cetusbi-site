@@ -1,0 +1,224 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroSection from '../components/HeroSection.astro';
+import Squiggle from '../components/Squiggle.astro';
+import NotFoundAnimation from '../components/art/NotFoundAnimation.astro';
+import { href } from '../lib/site';
+---
+
+<BaseLayout title="Page not found" description="This page dropped off the route." noindex>
+  <HeroSection wheel="landing">
+    <div class="hero container">
+      <div class="copy">
+        <span class="badge"><span class="dot" aria-hidden="true"></span>Route not found</span>
+
+        <h1>
+          <span class="visually-hidden">404</span>
+          <span class="digits" aria-hidden="true">
+            <span class="rise" style="--delay: 0.1s">4</span>
+            <span class="zero">
+              <svg viewBox="0 0 100 100">
+                <g class="wobble">
+                  <g class="spin">
+                    <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="10"></circle>
+                    <circle cx="50" cy="50" r="42" fill="none" stroke="#141F27" stroke-width="3" stroke-dasharray="2 12" opacity=".7"></circle>
+                    <g stroke="#A9BCC8" stroke-width="1.6" stroke-linecap="round">
+                      <line x1="50" y1="12" x2="50" y2="88"></line><line x1="12" y1="50" x2="88" y2="50"></line>
+                      <line x1="23" y1="23" x2="77" y2="77"></line><line x1="77" y1="23" x2="23" y2="77"></line>
+                      <line x1="31" y1="15" x2="69" y2="85"></line><line x1="69" y1="15" x2="31" y2="85"></line>
+                      <line x1="15" y1="31" x2="85" y2="69"></line><line x1="85" y1="31" x2="15" y2="69"></line>
+                    </g>
+                    <circle cx="50" cy="50" r="7" fill="#E3B341"></circle>
+                    <circle cx="50" cy="50" r="2.6" fill="#141F27"></circle>
+                  </g>
+                </g>
+              </svg>
+            </span>
+            <span class="rise" style="--delay: 0.5s">4</span>
+          </span>
+        </h1>
+
+        <div class="message">
+          <h2><span class="rise" style="--delay: 0.8s">Wrong <Squiggle delay={1.5}>turn.</Squiggle></span></h2>
+          <p class="lead rise" style="--delay: 1s">
+            This page dropped off the route. It was moved, renamed, or never existed. The GPS blames
+            the rider.
+          </p>
+        </div>
+
+        <div class="actions rise" style="--delay: 1.2s">
+          <a class="btn btn--primary" href={href('/')}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M19 12H5"></path>
+              <path d="M11 6l-6 6 6 6"></path>
+            </svg>
+            Back to the start
+          </a>
+          <a class="btn" href={href('/#writing')}>Read the latest</a>
+        </div>
+      </div>
+
+      <div class="visual">
+        <NotFoundAnimation />
+      </div>
+    </div>
+  </HeroSection>
+</BaseLayout>
+
+<style>
+  .hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 22px 56px;
+    padding-block: 24px 48px;
+  }
+
+  .copy {
+    flex: 1 1 480px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  /* 480 px + the card's 2 × 24 px padding (content-box in the design). */
+  .visual {
+    flex: 1 1 528px;
+    min-width: 0;
+  }
+
+  .badge {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--red);
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--red);
+  }
+
+  h1 {
+    font-size: clamp(110px, 15vw, 184px);
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+  }
+
+  .digits {
+    display: flex;
+    align-items: center;
+    gap: 0.04em;
+  }
+
+  .digits > span {
+    display: block;
+  }
+
+  .zero {
+    width: 0.76em;
+    height: 0.76em;
+    color: var(--accent);
+    animation: roll 1.1s cubic-bezier(0.2, 0.8, 0.3, 1) 0.3s both;
+  }
+
+  .zero svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .wobble {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: wobble 2.4s ease-in-out 1.6s infinite;
+  }
+
+  .spin {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: spin 7s linear infinite;
+  }
+
+  .message {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  h2 {
+    font-weight: 900;
+    font-size: clamp(32px, 4.4vw, 52px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  h2 > span {
+    display: block;
+  }
+
+  .lead {
+    max-width: 480px;
+    font-size: 17px;
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  @media (min-width: 720px) {
+    .hero {
+      gap: 56px;
+      padding-block: 48px 112px;
+    }
+
+    .copy {
+      gap: 28px;
+    }
+
+    .badge {
+      gap: 10px;
+      padding: 8px 16px;
+      font-size: var(--fs-eyebrow);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+    }
+
+    .lead {
+      font-size: var(--fs-lead);
+    }
+
+    .actions {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+  }
+
+  @keyframes roll {
+    0% { transform: translateX(-120px) rotate(-360deg); opacity: 0; }
+    100% { transform: none; opacity: 1; }
+  }
+
+  @keyframes wobble {
+    0%, 100% { transform: rotate(-4deg); }
+    50% { transform: rotate(4deg); }
+  }
+</style>
