@@ -1,0 +1,247 @@
+---
+import Logo from './Logo.astro';
+import { CONTACT_PATH, NAV, href, routeOf } from '../lib/site';
+
+const route = routeOf(Astro.url.pathname);
+const isActive = (activeOn?: string) =>
+  !!activeOn && (route === activeOn || route.startsWith(`${activeOn}/`));
+---
+
+<header class="site-header container" data-site-header>
+  <a class="brand" href={href('/')}>
+    <Logo />
+    <span class="wordmark">Cetus<span class="wordmark-accent">BI</span></span>
+  </a>
+
+  <button
+    type="button"
+    class="menu-toggle"
+    aria-expanded="false"
+    aria-controls="site-nav"
+    data-menu-toggle
+  >
+    <span class="visually-hidden" data-menu-label>Open menu</span>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <g class="icon-open">
+        <line x1="4" y1="7" x2="20" y2="7"></line>
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="17" x2="14" y2="17"></line>
+      </g>
+      <g class="icon-close">
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+      </g>
+    </svg>
+  </button>
+
+  <nav id="site-nav" class="site-nav" aria-label="Main">
+    <ul role="list">
+      {
+        NAV.map((item) => {
+          const active = isActive(item.activeOn);
+          return (
+            <li>
+              <a
+                class:list={['nav-link', { active }]}
+                href={href(item.path)}
+                aria-current={active ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          );
+        })
+      }
+      <li>
+        <a class="btn btn--sm btn--outline-accent say-hi" href={href(CONTACT_PATH)}>Say hi</a>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-site-header]');
+  const toggle = header?.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const label = header?.querySelector<HTMLElement>('[data-menu-label]');
+
+  if (header && toggle && label) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      label.textContent = open ? 'Close menu' : 'Open menu';
+    };
+    const isOpen = () => toggle.getAttribute('aria-expanded') === 'true';
+
+    toggle.addEventListener('click', () => setOpen(!isOpen()));
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && isOpen()) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    document.addEventListener('click', (event) => {
+      if (isOpen() && event.target instanceof Node && !header.contains(event.target)) setOpen(false);
+    });
+
+    header.querySelectorAll('.site-nav a').forEach((link) => {
+      link.addEventListener('click', () => setOpen(false));
+    });
+  }
+</script>
+
+<style>
+  .site-header {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-block: 12px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: var(--tap);
+    color: var(--text);
+  }
+
+  .brand :global(svg) {
+    width: 30px;
+    height: 30px;
+  }
+
+  .wordmark {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 19px;
+    letter-spacing: -0.01em;
+  }
+
+  .wordmark-accent {
+    color: var(--accent);
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 28px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap);
+  }
+
+  .nav-link.active {
+    color: var(--accent);
+    box-shadow: inset 0 -2px 0 var(--accent);
+  }
+
+  .say-hi {
+    font-weight: 700;
+  }
+
+  .menu-toggle {
+    display: none;
+    width: var(--tap);
+    height: var(--tap);
+    padding: 0;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-btn-sm);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .icon-close {
+    display: none;
+  }
+
+  .menu-toggle[aria-expanded='true'] .icon-open {
+    display: none;
+  }
+
+  .menu-toggle[aria-expanded='true'] .icon-close {
+    display: inline;
+  }
+
+  /* Mobile: the menu collapses behind the toggle, but only when JS can open it again. */
+  @media (max-width: 719.98px) {
+    :global(.js) .menu-toggle {
+      display: grid;
+    }
+
+    :global(.js) .site-nav {
+      display: none;
+      position: absolute;
+      top: calc(100% - 4px);
+      left: var(--gutter);
+      right: var(--gutter);
+      padding: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card-sm);
+      box-shadow: var(--shadow-card);
+    }
+
+    :global(.js) .menu-toggle[aria-expanded='true'] + .site-nav {
+      display: block;
+    }
+
+    :global(.js) ul {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 4px;
+      font-size: 17px;
+    }
+
+    :global(.js) .nav-link {
+      width: 100%;
+      min-height: 48px;
+      padding-inline: 12px;
+      border-radius: var(--radius-btn-sm);
+    }
+
+    :global(.js) .nav-link.active {
+      box-shadow: inset 3px 0 0 var(--accent);
+    }
+
+    :global(.js) .say-hi {
+      width: 100%;
+      min-height: 48px;
+      margin-top: 8px;
+    }
+  }
+
+  @media (min-width: 720px) {
+    .site-header {
+      padding-block: 24px;
+    }
+
+    .brand {
+      gap: 12px;
+    }
+
+    .brand :global(svg) {
+      width: 34px;
+      height: 34px;
+    }
+
+    .wordmark {
+      font-size: 21px;
+    }
+  }
+</style>

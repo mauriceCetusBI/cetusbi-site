@@ -1,0 +1,25 @@
+# Raw ride data can reveal start locations
+*.fit
+*.gpx
+*.tcx
+
+# Unpublished content
+drafts/
+src/content/_samples/
+
+# Unprocessed photos and video (may carry EXIF/GPS); only stripped files go in src/assets
+originals/
+
+# Secrets
+.env*
+
+# Dependencies and build output
+node_modules/
+dist/
+.astro/
+
+# Logs and OS files
+*.log
+.DS_Store
+Thumbs.db
+desktop.ini

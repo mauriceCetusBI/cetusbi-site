@@ -1,0 +1,84 @@
+/* Design tokens */
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('../assets/fonts/montserrat-latin-800-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('../assets/fonts/montserrat-latin-900-normal.woff2') format('woff2');
+}
+
+:root {
+  color-scheme: dark;
+
+  /* Colors */
+  --bg: #141f27;
+  --surface: #1e2f3b;
+  --band: #101a21;
+  --text: #f8f8ff;
+  --text-muted: #a9bcc8;
+  --text-subtle: #6e8794; /* decorative only: fails AA for small text */
+  --text-prose: #d5e0e6;
+  --border: #34505f;
+  --track: #2c4455;
+  --code-bg: #0b1319;
+
+  --accent: #a6ddbe;
+  --on-accent: #141f27;
+  --green-1: #7fd3a2;
+  --green-2: #5cc488;
+  --green-3: #4cb97a;
+  --yellow: #e3b341;
+  --red: #f07a7a;
+
+  /* Type */
+  --font-heading: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --fs-body: 16px;
+  --lh-body: 1.5;
+  --fs-h1: clamp(46px, 7vw, 88px);
+  --fs-h2: clamp(28px, 4vw, 44px);
+  --fs-eyebrow: 13px;
+  --fs-lead: 19px;
+
+  /* Layout */
+  --content-width: 1200px;
+  --gutter: 20px;
+  --section-pad: 56px;
+
+  /* Shape */
+  --radius-card: 24px;
+  --radius-card-sm: 20px;
+  --radius-inner: 14px;
+  --radius-btn: 14px;
+  --radius-btn-sm: 12px;
+  --radius-pill: 999px;
+  --shadow-card: 0 24px 60px rgba(0, 0, 0, 0.35);
+  --shadow-sticker: 0 8px 20px rgba(0, 0, 0, 0.35);
+
+  /* Motion */
+  --dur-hover: 250ms;
+  --ease-hover: ease;
+
+  --tap: 44px;
+}
+
+/* Mobile values above match the 390 px board; desktop values from 720 px. */
+@media (min-width: 720px) {
+  :root {
+    --fs-body: 17px;
+    --lh-body: 1.55;
+    --gutter: 40px;
+    --section-pad: 104px;
+  }
+}

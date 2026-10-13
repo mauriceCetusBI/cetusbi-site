@@ -1,0 +1,73 @@
+---
+import { NAV, SITE, href } from '../lib/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container inner">
+    <span>© {year} {SITE.name}</span>
+    <ul role="list">
+      {
+        NAV.map((item) => (
+          <li class="nav-item">
+            <a href={href(item.path)}>{item.label}</a>
+          </li>
+        ))
+      }
+      <li>
+        <a href="#top">Back to top ↑</a>
+      </li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--surface);
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .inner {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-block: 20px;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+  }
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap);
+  }
+
+  /* The mobile board shows only "Back to top"; the header menu covers navigation. */
+  .nav-item {
+    display: none;
+  }
+
+  @media (min-width: 720px) {
+    .inner {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-block: 32px;
+    }
+
+    .nav-item {
+      display: list-item;
+    }
+  }
+</style>
