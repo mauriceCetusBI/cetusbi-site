@@ -1,18 +1,20 @@
 ---
 // Compact post card: small cover tile on the left, tag and title on the right.
-// Used next to the featured post on the landing page.
+// "compact": next to the featured post on the landing page. "related": "Keep reading" under an
+// article (padded card with the tile inside). Both look the same on mobile.
 import PostCover from './PostCover.astro';
 import { postPath, tagLabel, type Post } from '../lib/content';
 import { href } from '../lib/site';
 
 interface Props {
   post: Post;
+  variant?: 'compact' | 'related';
 }
 
-const { post } = Astro.props;
+const { post, variant = 'compact' } = Astro.props;
 ---
 
-<a class:list={['card', 'compact']} href={href(postPath(post))}>
+<a class:list={['card', 'compact', { related: variant === 'related' }]} href={href(postPath(post))}>
   <div class="thumb">
     <div class="thumb-art"><PostCover post={post} size="thumb" sizes="132px" /></div>
   </div>
@@ -109,6 +111,32 @@ const { post } = Astro.props;
 
     h3 {
       font-size: 19px;
+    }
+
+    .related {
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .related .thumb {
+      flex: none;
+      width: 96px;
+      height: 96px;
+      min-height: 0;
+      border-radius: var(--radius-inner);
+    }
+
+    .related .thumb-art {
+      width: 62px;
+      height: 62px;
+    }
+
+    .related .body {
+      flex: 1 1 auto;
+      gap: 6px;
+      padding: 0;
     }
   }
 </style>

@@ -102,3 +102,14 @@ export function goalsUpdatedLabel(goals: Goal[]): string | undefined {
     new Date(Date.UTC(year!, month! - 1, 1)),
   );
 }
+
+/** Other posts to read next: most shared tags first, then newest. */
+export async function getRelatedPosts(post: Post, limit = 2): Promise<Post[]> {
+  const shared = (other: Post) => other.data.tags.filter((tag) => post.data.tags.includes(tag)).length;
+  const others = (await getPosts()).filter((other) => other.id !== post.id);
+  return others
+    .map((other, index) => ({ other, index, score: shared(other) }))
+    .sort((a, b) => b.score - a.score || a.index - b.index)
+    .slice(0, limit)
+    .map(({ other }) => other);
+}

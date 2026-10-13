@@ -7,9 +7,12 @@ import { z } from 'astro/zod';
 const withSamples = (folder: string) =>
   import.meta.env.DEV ? [`${folder}/**/*.md`, `_samples/${folder}/**/*.md`] : [`${folder}/**/*.md`];
 
-// The entry id is the file name, so a post at posts/my-ride.md lives at /writing/my-ride.
-const idFromFileName = ({ entry }: { entry: string }) =>
-  entry.split('/').at(-1)!.replace(/\.md$/, '');
+// The entry id is the file name: posts/my-ride.md lives at /writing/my-ride. A post with its own
+// images can be a folder instead: posts/my-ride/index.md (photos next to it) gets the same URL.
+const idFromFileName = ({ entry }: { entry: string }) => {
+  const parts = entry.replace(/\.md$/, '').split('/');
+  return parts.at(-1) === 'index' ? parts.at(-2)! : parts.at(-1)!;
+};
 
 export const TAGS = ['Ride', 'Data', 'Build'] as const;
 

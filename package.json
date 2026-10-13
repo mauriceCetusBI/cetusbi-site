@@ -8,12 +8,15 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build",
+    "build": "npm run media:check && astro check && astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "media:check": "node scripts/check-media-metadata.mjs",
+    "media:strip": "node scripts/strip-media-metadata.mjs",
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/markdown-satteri": "0.4.3",
     "astro": "7.3.8"
   },
   "devDependencies": {

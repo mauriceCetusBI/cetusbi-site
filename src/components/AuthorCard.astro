@@ -1,0 +1,58 @@
+---
+import { href } from '../lib/site';
+---
+
+<aside class="author" aria-label="About the author">
+  <div class="avatar" aria-hidden="true">M</div>
+  <div class="text">
+    <p class="name">Written by Maurice</p>
+    <p class="bio">Data engineer and cyclist. I write about rides, data and the tools in between.</p>
+  </div>
+  <a class="btn btn--sm btn--outline-accent" href={href('/about')}>More about me</a>
+</aside>
+
+<style>
+  .author {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card-sm);
+  }
+
+  .avatar {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 22px;
+  }
+
+  .text {
+    flex: 1 1 280px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .name {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 18px;
+  }
+
+  .bio {
+    font-size: 15px;
+    color: var(--text-muted);
+  }
+</style>
