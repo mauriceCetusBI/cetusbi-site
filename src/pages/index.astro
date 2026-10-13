@@ -22,6 +22,7 @@ import { href } from '../lib/site';
       </a>
       <a class="btn" href={href('/#projects')}>See what I've built</a>
     </div>
+    {import.meta.env.DEV && <a class="dev-link" href={href('/dev/content')}>Dev: content preview →</a>}
   </section>
 </BaseLayout>
 
@@ -74,6 +75,15 @@ import { href } from '../lib/site';
     display: flex;
     flex-direction: column;
     gap: 12px;
+  }
+
+  .dev-link {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap);
+    font-weight: 700;
+    color: var(--yellow);
   }
 
   @media (min-width: 720px) {

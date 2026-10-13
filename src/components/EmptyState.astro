@@ -1,0 +1,37 @@
+---
+// Shown where a list has no published entries yet. The design has no board for this; kept minimal.
+interface Props {
+  title: string;
+  text?: string;
+}
+
+const { title, text } = Astro.props;
+---
+
+<div class="empty">
+  <p class="title">{title}</p>
+  {text && <p class="text">{text}</p>}
+</div>
+
+<style>
+  .empty {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 28px;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-card-sm);
+    background: var(--band);
+  }
+
+  .title {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 19px;
+  }
+
+  .text {
+    color: var(--text-muted);
+    font-size: 16px;
+  }
+</style>

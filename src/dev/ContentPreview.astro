@@ -1,0 +1,265 @@
+---
+// Dev-only overview of all content, injected by astro.config.mjs at /dev/content during `astro dev`.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EmptyState from '../components/EmptyState.astro';
+import {
+  formatDate,
+  getGoals,
+  getPosts,
+  getProjects,
+  goalProgress,
+  goalsUpdatedLabel,
+  isSample,
+  readingTime,
+  tagLabel,
+} from '../lib/content';
+
+const [posts, projects, goals] = await Promise.all([getPosts(), getProjects(), getGoals()]);
+const coverOf = (cover: (typeof posts)[number]['data']['cover']) =>
+  !cover ? 'none' : 'art' in cover ? `art: ${cover.art}` : 'image';
+---
+
+<BaseLayout title="Content preview (dev)">
+  <div class="container section stack">
+    <header class="stack-sm">
+      <span class="eyebrow">Dev only</span>
+      <h1>Content preview</h1>
+      <p class="lead">
+        Everything the content collections load in <code>astro dev</code>. This page does not exist
+        in a production build. Production shows only published entries, without samples or drafts.
+      </p>
+    </header>
+
+    <section class="stack-sm">
+      <h2>Posts <span class="count">{posts.length}</span></h2>
+      {
+        posts.length === 0 ? (
+          <EmptyState title="No posts yet" text="Add Markdown files to src/content/posts/." />
+        ) : (
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Title</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Tags</th>
+                  <th scope="col">Read</th>
+                  <th scope="col">Cover</th>
+                  <th scope="col">Projects</th>
+                  <th scope="col">State</th>
+                </tr>
+              </thead>
+              <tbody>
+                {posts.map((post) => (
+                  <tr>
+                    <td class="title">
+                      {post.data.title}
+                      <span class="id">/writing/{post.id}</span>
+                    </td>
+                    <td>{formatDate(post.data.date)}</td>
+                    <td class="accent">{tagLabel(post.data.tags)}</td>
+                    <td>{readingTime(post.body)} min</td>
+                    <td>{coverOf(post.data.cover)}</td>
+                    <td>{post.data.projects.map((ref) => ref.id).join(', ') || '–'}</td>
+                    <td>
+                      {isSample(post) && <span class="badge sample">Sample</span>}
+                      {post.data.draft && <span class="badge">Draft</span>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )
+      }
+    </section>
+
+    <section class="stack-sm">
+      <h2>Projects <span class="count">{projects.length}</span></h2>
+      {
+        projects.length === 0 ? (
+          <EmptyState title="No projects yet" text="Add Markdown files to src/content/projects/." />
+        ) : (
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Order</th>
+                  <th scope="col">Title</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Role</th>
+                  <th scope="col">Stack</th>
+                  <th scope="col">Started</th>
+                  <th scope="col">State</th>
+                </tr>
+              </thead>
+              <tbody>
+                {projects.map((project) => (
+                  <tr>
+                    <td>{project.data.order}</td>
+                    <td class="title">
+                      {project.data.title}
+                      <span class="id">/projects/{project.id}</span>
+                    </td>
+                    <td>{project.data.status}</td>
+                    <td>{project.data.role}</td>
+                    <td>{project.data.stack.join(' · ')}</td>
+                    <td>{project.data.started}</td>
+                    <td>
+                      {isSample(project) && <span class="badge sample">Sample</span>}
+                      {project.data.draft && <span class="badge">Draft</span>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )
+      }
+    </section>
+
+    <section class="stack-sm">
+      <h2>Goals <span class="count">{goals.length}</span></h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Goal</th>
+              <th scope="col">Target</th>
+              <th scope="col">Right now</th>
+              <th scope="col">Progress</th>
+              <th scope="col">Updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            {goals.map((goal) => {
+              const { data } = goal;
+              return (
+                <tr>
+                  <td class="title">{data.label}</td>
+                  <td>
+                    {data.headline} {data.unit}
+                  </td>
+                  <td>{data.kind === 'ring' ? `${data.current} ${data.currentUnit}` : data.currentLabel}</td>
+                  <td class="accent">{Math.round(goalProgress(goal) * 100)}%</td>
+                  <td>{data.updated}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Footnote on About: "Numbers as of {goalsUpdatedLabel(goals)}."</p>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+  }
+
+  .stack-sm {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  h1 {
+    font-size: clamp(36px, 5vw, 56px);
+  }
+
+  h2 {
+    font-size: 28px;
+  }
+
+  .count {
+    color: var(--accent);
+  }
+
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card-sm);
+    background: var(--surface);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+  }
+
+  th,
+  td {
+    padding: 12px 16px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--track);
+  }
+
+  tr:last-child td {
+    border-bottom: 0;
+  }
+
+  th {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  td {
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .title {
+    color: var(--text);
+    font-weight: 700;
+    min-width: 260px;
+    white-space: normal;
+  }
+
+  .id {
+    display: block;
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .accent {
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .badge {
+    display: inline-block;
+    margin: 0 4px 4px 0;
+    padding: 2px 10px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .badge.sample {
+    background: var(--yellow);
+    border-color: var(--yellow);
+    color: var(--on-accent);
+  }
+
+  .note {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+</style>
