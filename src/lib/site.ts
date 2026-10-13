@@ -1,5 +1,6 @@
 export const SITE = {
   name: 'CetusBI',
+  domain: 'cetusbi.com',
   description:
     'Where cycling meets data. Ride write-ups, data engineering and the tools in between, by Maurice.',
 } as const;
