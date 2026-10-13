@@ -1,6 +1,8 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import type { COVER_ART, PROJECT_ART } from '../content.config';
 
+export { TAGS } from '../content.config';
+
 export type Post = CollectionEntry<'posts'>;
 export type Project = CollectionEntry<'projects'>;
 export type Goal = CollectionEntry<'goals'>;

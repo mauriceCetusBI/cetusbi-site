@@ -1,25 +1,30 @@
 ---
-// The newest post, large. Landing layout: cover on top, text below.
+// The newest post, large. "stacked" (landing): cover on top, text below.
+// "split" (Writing overview): cover left, text right, with date and reading time.
 import PostCover from './PostCover.astro';
-import { isNew, postPath, tagLabel, type Post } from '../lib/content';
+import { formatDate, isNew, postPath, readingTime, tagLabel, type Post } from '../lib/content';
 import { href } from '../lib/site';
 
 interface Props {
   post: Post;
+  layout?: 'stacked' | 'split';
+  headingLevel?: 'h2' | 'h3';
 }
 
-const { post } = Astro.props;
+const { post, layout = 'stacked', headingLevel: Heading = 'h3' } = Astro.props;
+const split = layout === 'split';
 ---
 
-<a class:list={['card', 'featured']} href={href(postPath(post))}>
+<a class:list={['card', 'featured', layout]} href={href(postPath(post))} data-tags={post.data.tags.join(' ')}>
   <div class="cover">
-    <PostCover post={post} size="wide" sizes="(min-width: 1200px) 640px, 100vw" />
+    <PostCover post={post} size="wide" sizes={split ? '(min-width: 1200px) 620px, 100vw' : '(min-width: 1200px) 640px, 100vw'} />
     {isNew(post) && <span class="new">New</span>}
   </div>
   <div class="body">
     <span class="tags">{tagLabel(post.data.tags)}</span>
-    <h3>{post.data.title}</h3>
+    <Heading class="title">{post.data.title}</Heading>
     <p class="summary">{post.data.summary}</p>
+    {split && <span class="meta">{formatDate(post.data.date)} · {readingTime(post.body)} min read</span>}
     <span class="read">Read post →</span>
   </div>
 </a>
@@ -68,13 +73,20 @@ const { post } = Astro.props;
     color: var(--accent);
   }
 
-  h3 {
+  .title {
     font-size: 22px;
     line-height: 1.15;
+    letter-spacing: -0.01em;
   }
 
   .summary {
     font-size: 15px;
+    color: var(--text-muted);
+  }
+
+  .meta {
+    font-size: 13px;
+    font-weight: 600;
     color: var(--text-muted);
   }
 
@@ -103,9 +115,8 @@ const { post } = Astro.props;
       padding: 28px;
     }
 
-    h3 {
+    .title {
       font-size: 28px;
-      letter-spacing: -0.01em;
     }
 
     .summary {
@@ -118,6 +129,34 @@ const { post } = Astro.props;
       min-height: var(--tap);
       font-weight: 700;
       color: var(--accent);
+    }
+
+    /* Split: cover and text side by side, wrapping to stacked when narrow (as on the board). */
+    .split {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .split .cover {
+      flex: 1.2 1 480px;
+      height: auto;
+      min-height: 320px;
+    }
+
+    /* 380 px + 2 × 40 px padding (content-box on the board). */
+    .split .body {
+      flex: 1 1 460px;
+      justify-content: center;
+      gap: 14px;
+      padding: 40px;
+    }
+
+    .split .title {
+      font-size: clamp(26px, 3vw, 36px);
+    }
+
+    .split .summary {
+      font-size: 17px;
     }
   }
 </style>

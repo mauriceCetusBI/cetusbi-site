@@ -210,6 +210,11 @@ a.card:hover,
   border-color: var(--accent);
 }
 
+/* The hidden attribute must win over component display rules (used by the post filter). */
+[hidden] {
+  display: none !important;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;

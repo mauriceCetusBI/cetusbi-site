@@ -51,7 +51,7 @@ if (size === 'thumb' && THUMB[variant]) {
 }
 ---
 
-<svg class:list={['cover-art', size]} viewBox={viewBox} preserveAspectRatio={fit} aria-hidden="true" set:html={body} />
+<svg class:list={['cover-art', `cover-art--${size}`]} viewBox={viewBox} preserveAspectRatio={fit} aria-hidden="true" set:html={body} />
 
 <style>
   .cover-art {

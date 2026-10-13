@@ -1,0 +1,94 @@
+---
+// Topic filter for the Writing overview. Buttons toggle which cards are visible: every element
+// inside `target` with a data-tags attribute is shown or hidden. Without JS all posts stay visible.
+import { TAG_LABELS, TAGS, type Post } from '../lib/content';
+
+interface Props {
+  posts: Post[];
+  /** CSS selector of the element that holds the cards. */
+  target: string;
+}
+
+const { posts, target } = Astro.props;
+const chips = [
+  { value: 'all', label: 'All', count: posts.length },
+  ...TAGS.map((tag) => ({
+    value: tag,
+    label: TAG_LABELS[tag],
+    count: posts.filter((post) => post.data.tags.includes(tag)).length,
+  })),
+].filter((chip) => chip.count > 0);
+---
+
+<div class="filters" role="group" aria-label="Filter by topic" data-filter-target={target}>
+  {
+    chips.map((chip) => (
+      <button type="button" class="chip" data-filter={chip.value} aria-pressed={chip.value === 'all' ? 'true' : 'false'}>
+        {chip.label}
+        <span class="count">{chip.count}</span>
+      </button>
+    ))
+  }
+</div>
+
+<script>
+  const group = document.querySelector<HTMLElement>('[data-filter-target]');
+  const container = group && document.querySelector<HTMLElement>(group.dataset.filterTarget!);
+
+  if (group && container) {
+    const buttons = [...group.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+    group.addEventListener('click', (event) => {
+      const button = (event.target as Element).closest<HTMLButtonElement>('[data-filter]');
+      if (!button) return;
+      const value = button.dataset.filter!;
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+      container.querySelectorAll<HTMLElement>('[data-tags]').forEach((card) => {
+        const show = value === 'all' || card.dataset.tags!.split(' ').includes(value);
+        // Hide the card's list item (or the card itself when it is not in a list).
+        (card.closest('li') ?? card).hidden = !show;
+      });
+    });
+  }
+</script>
+
+<style>
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 0 20px;
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--border);
+    background: none;
+    color: var(--text);
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition:
+      border-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .chip:hover {
+    border-color: var(--accent);
+  }
+
+  .chip[aria-pressed='true'] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .count {
+    font-size: 12px;
+    font-weight: 800;
+    opacity: 0.7;
+  }
+</style>

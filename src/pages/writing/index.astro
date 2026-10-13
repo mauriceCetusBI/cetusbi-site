@@ -1,0 +1,136 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import FeaturedPost from '../../components/FeaturedPost.astro';
+import FilterChips from '../../components/FilterChips.astro';
+import HeroSection from '../../components/HeroSection.astro';
+import PostGridCard from '../../components/PostGridCard.astro';
+import Squiggle from '../../components/Squiggle.astro';
+import { getPosts } from '../../lib/content';
+
+const posts = await getPosts();
+const [featured, ...rest] = posts;
+// Filtering only pays off with enough posts; with few, the featured post and grid say it all.
+const showFilters = posts.length > 6;
+---
+
+<BaseLayout
+  title="Writing"
+  description="Build logs, ride write-ups and notes from the data side: every post on CetusBI."
+>
+  <HeroSection>
+    <div class="container intro">
+      <span class="eyebrow">Writing</span>
+      <h1>
+        <span class="rise" style="--delay: 0.1s">Everything I've</span>
+        <span class="rise" style="--delay: 0.3s"><Squiggle>written.</Squiggle></span>
+      </h1>
+      <p class="lead rise" style="--delay: 0.5s">
+        Build logs, ride write-ups and notes from the data side.{' '}
+        {showFilters ? 'Filter by topic, or just start with the newest.' : 'Start with the newest.'}
+      </p>
+    </div>
+  </HeroSection>
+
+  <section class="container posts" id="posts" aria-label="Posts">
+    {
+      featured ? (
+        <>
+          {showFilters && (
+            <div class="toolbar">
+              <FilterChips posts={posts} target="#posts" />
+              <span class="order">Newest first</span>
+            </div>
+          )}
+          <FeaturedPost post={featured} layout="split" headingLevel="h2" />
+          {rest.length > 0 && (
+            <>
+              <h2 class="visually-hidden">More posts</h2>
+              <ul class="grid" role="list">
+                {rest.map((post) => (
+                  <li>
+                    <PostGridCard post={post} />
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </>
+      ) : (
+        <EmptyState title="First posts are on their way." text="Ride write-ups and build logs land here soon." />
+      )
+    }
+  </section>
+</BaseLayout>
+
+<style>
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-block: 24px 40px;
+  }
+
+  h1 {
+    font-size: clamp(44px, 6.4vw, 80px);
+  }
+
+  h1 > span {
+    display: block;
+  }
+
+  .lead {
+    max-width: 560px;
+    font-size: 17px;
+  }
+
+  .posts {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-bottom: 72px;
+  }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .order {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  .grid {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+    gap: 20px;
+  }
+
+  @media (min-width: 720px) {
+    .intro {
+      gap: 20px;
+      padding-block: 56px 64px;
+    }
+
+    .lead {
+      font-size: var(--fs-lead);
+    }
+
+    .posts {
+      gap: 40px;
+      padding-bottom: 104px;
+    }
+
+    .grid {
+      gap: 24px;
+    }
+  }
+</style>
