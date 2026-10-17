@@ -53,7 +53,7 @@ export interface NavItem {
 export const NAV: NavItem[] = [
   { label: 'Writing', path: '/writing', activeOn: '/writing' },
   { label: 'Projects', path: '/#projects', activeOn: '/projects' },
-  { label: 'About', path: '/about', activeOn: '/about' },
+  // About is added back when the page exists.
 ];
 
 export interface SocialLink {
@@ -66,9 +66,9 @@ export const SOCIAL: SocialLink[] = [];
 
 /**
  * Where every "Say hi" goes: the LinkedIn profile from src/data/contact.json, or the About
- * contact block while no URL is set. Use this for any new contact button.
+ * teaser on the landing page while no URL is set. Use this for any new contact button.
  */
-export const CONTACT_URL = contact.linkedin || href('/about#contact');
+export const CONTACT_URL = contact.linkedin || href('/#about');
 
 /** Attributes for a link to an outside site: opens in a new tab without leaking the opener. */
 export const EXTERNAL_LINK = { target: '_blank', rel: 'noopener' } as const;
