@@ -13,6 +13,27 @@ export function href(path: string): string {
   return `${BASE}${path}` || '/';
 }
 
+/** True only for the real domain: previews and local builds are never indexed. */
+export const isProductionSite = (site: URL | undefined) => site?.hostname === SITE.domain;
+
+/** Absolute URL of a page as it is served: directory format, so with a trailing slash. */
+export function pageUrl(path: string, site: URL): string {
+  const [pathname, hash] = path.split('#');
+  const withSlash = pathname!.endsWith('/') ? pathname! : `${pathname}/`;
+  return new URL(href(withSlash) + (hash ? `#${hash}` : ''), site).href;
+}
+
+/** Absolute URL of a file (image, feed). */
+export const fileUrl = (path: string, site: URL) => new URL(href(path), site).href;
+
+/** Default Open Graph image (1200×630, public/og/default.png). */
+export const DEFAULT_OG_IMAGE = {
+  path: '/og/default.png',
+  alt: 'CetusBI: where cycling meets data',
+  width: 1200,
+  height: 630,
+};
+
 /** Strips the base path so the current route can be compared with nav paths. */
 export function routeOf(pathname: string): string {
   const route = pathname.startsWith(BASE) ? pathname.slice(BASE.length) : pathname;

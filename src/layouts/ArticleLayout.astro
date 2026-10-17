@@ -2,13 +2,14 @@
 // Article page, from the article board: progress bar, header, cover, body, author card and
 // "Keep reading". Mobile is not designed; it follows the landing mobile patterns.
 import '../styles/prose.css';
-import BaseLayout from './BaseLayout.astro';
+import { getImage } from 'astro:assets';
+import BaseLayout, { type OgImage } from './BaseLayout.astro';
 import AuthorCard from '../components/AuthorCard.astro';
 import PostCard from '../components/PostCard.astro';
 import PostCover from '../components/PostCover.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
 import Tag from '../components/Tag.astro';
-import { formatDate, getRelatedPosts, readingTime, type Post } from '../lib/content';
+import { coverOf, formatDate, getRelatedPosts, readingTime, type Post } from '../lib/content';
 import { href } from '../lib/site';
 
 interface Props {
@@ -19,9 +20,17 @@ const { post } = Astro.props;
 const { title, summary, tags, date } = post.data;
 const minutes = readingTime(post.body);
 const related = await getRelatedPosts(post);
+
+// A cover photo doubles as the social preview, cropped to 1200×630. Generated art uses the default.
+const cover = coverOf(post);
+let ogImage: OgImage | undefined;
+if (cover.kind === 'image') {
+  const og = await getImage({ src: cover.image, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
+  ogImage = { url: new URL(og.src, Astro.site).href, alt: cover.alt, width: 1200, height: 630 };
+}
 ---
 
-<BaseLayout title={title} description={summary}>
+<BaseLayout title={title} description={summary} type="article" published={date} image={ogImage}>
   <ReadingProgress slot="top" target="#article" />
 
   <article id="article">
