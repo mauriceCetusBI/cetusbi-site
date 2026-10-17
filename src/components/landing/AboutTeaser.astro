@@ -1,7 +1,7 @@
 ---
 // "Hi, I'm Maurice." block. No photo yet: the tile shows only the wheel pattern
 // (the design's "[Your photo]" placeholder text is never shipped).
-import { SOCIAL } from '../../lib/site';
+import { EXTERNAL_LINK, SOCIAL } from '../../lib/site';
 ---
 
 <section id="about" aria-labelledby="about-title">
@@ -29,7 +29,7 @@ import { SOCIAL } from '../../lib/site';
           <ul class="links" role="list">
             {SOCIAL.map((link) => (
               <li>
-                <a class="btn btn--sm" href={link.url} rel="me">
+                <a class="btn btn--sm" href={link.url} {...EXTERNAL_LINK} rel="noopener me">
                   {link.label}
                 </a>
               </li>

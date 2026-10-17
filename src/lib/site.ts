@@ -69,3 +69,9 @@ export const SOCIAL: SocialLink[] = [];
  * contact block while no URL is set. Use this for any new contact button.
  */
 export const CONTACT_URL = contact.linkedin || href('/about#contact');
+
+/** Attributes for a link to an outside site: opens in a new tab without leaking the opener. */
+export const EXTERNAL_LINK = { target: '_blank', rel: 'noopener' } as const;
+
+/** Same for the contact button, which stays in the tab while it still points at the About page. */
+export const CONTACT_LINK = contact.linkedin ? EXTERNAL_LINK : {};
