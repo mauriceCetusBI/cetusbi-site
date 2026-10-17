@@ -1,6 +1,6 @@
 ---
 import Logo from './Logo.astro';
-import { CONTACT_PATH, NAV, href, routeOf } from '../lib/site';
+import { CONTACT_URL, NAV, href, routeOf } from '../lib/site';
 
 const route = routeOf(Astro.url.pathname);
 const isActive = (activeOn?: string) =>
@@ -53,7 +53,7 @@ const isActive = (activeOn?: string) =>
         })
       }
       <li>
-        <a class="btn btn--sm btn--outline-accent say-hi" href={href(CONTACT_PATH)}>Say hi</a>
+        <a class="btn btn--sm btn--outline-accent say-hi" href={CONTACT_URL}>Say hi</a>
       </li>
     </ul>
   </nav>

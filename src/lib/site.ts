@@ -1,3 +1,5 @@
+import contact from '../data/contact.json';
+
 export const SITE = {
   name: 'CetusBI',
   domain: 'cetusbi.com',
@@ -62,4 +64,8 @@ export interface SocialLink {
 // Only links with a real URL are shown; an empty list renders no buttons at all.
 export const SOCIAL: SocialLink[] = [];
 
-export const CONTACT_PATH = '/about#contact';
+/**
+ * Where every "Say hi" goes: the LinkedIn profile from src/data/contact.json, or the About
+ * contact block while no URL is set. Use this for any new contact button.
+ */
+export const CONTACT_URL = contact.linkedin || href('/about#contact');
